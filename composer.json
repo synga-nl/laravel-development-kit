@@ -9,5 +9,10 @@
             "name": "Synga",
             "email": "info@synga.nl"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Synga\\LaravelDevelopment\\": "src/"
+        }
+    }
 }
