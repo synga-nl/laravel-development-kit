@@ -3,7 +3,6 @@
     "description": "Development Kit for Laravel to start your projects very easy",
     "type": "library",
     "require": {
-        "laravel/laravel": "5.*"
     },
     "authors": [
         {
