@@ -3,8 +3,7 @@
     "description": "Development Kit for Laravel to start your projects very easy",
     "type": "library",
     "require": {
-        "laravel/laravel": ">=5.2",
-        "synga/laravel-development-kit": "@dev"
+        "laravel/laravel": ">=5.2"
     },
     "authors": [
         {
