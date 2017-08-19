@@ -4,6 +4,10 @@ namespace Synga\LaravelDevelopment;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class LaravelDevelopmentServiceProvider
+ * @package Synga\LaravelDevelopment
+ */
 class LaravelDevelopmentServiceProvider extends ServiceProvider
 {
     /**
@@ -16,6 +20,14 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Config/development.php' => config_path('development.php'),
         ]);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\DeferComposerArtisanCommandsCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\RunCommandForPackageCommand::class,
+            ]);
+        }
     }
 
     /**
@@ -25,11 +37,6 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->commands([
-            \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
-            \Synga\LaravelDevelopment\Console\Command\DeferComposerArtisanCommandsCommand::class
-        ]);
-
         $packagesConfig = \Config::get('development.packages');
 
         if (!empty($packagesConfig)) {
@@ -45,11 +52,11 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             }
 
             if ($this->app->environment('production')) {
-                foreach($production as $productionServiceProvider){
+                foreach ($production as $productionServiceProvider) {
                     $this->app->register($productionServiceProvider);
                 }
             } else {
-                foreach($development as $developmentServiceProvider){
+                foreach ($development as $developmentServiceProvider) {
                     $this->app->register($developmentServiceProvider);
                 }
             }

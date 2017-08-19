@@ -4,6 +4,10 @@ namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class DeferComposerArtisanCommandsCommand
+ * @package Synga\LaravelDevelopment\Console\Command
+ */
 class DeferComposerArtisanCommandsCommand extends Command
 {
     /**

@@ -4,6 +4,10 @@ namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
 
+/**
+ * Class SetupDevelopmentCommand
+ * @package Synga\LaravelDevelopment\Console\Command
+ */
 class SetupDevelopmentCommand extends Command
 {
     /**
