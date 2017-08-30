@@ -33,11 +33,11 @@ class Composer implements Phase
      */
     public function handle(ConfigurationHandler $configuration)
     {
-        $this->removeFromArrayRecursive('scripts', 'pony');
+        $this->removeFromArrayRecursive('scripts', 'artisan development:commands');
 
         foreach ($configuration->getFromAllPackages('composer.commands') as $event => $package) {
             $this->composerFile->addCommand(
-                'php artisan development:commands install',
+                'php artisan development:commands ' . $event,
                 $event,
                 'Illuminate\\Foundation\\ComposerScripts::postUpdate'
             );
@@ -55,17 +55,19 @@ class Composer implements Phase
      * Remove command from the commands list in the composer file.
      *
      * @param $key
-     * @param $command
+     * @param $partialCommand
      */
-    protected function removeFromArrayRecursive($key, $command)
+    protected function removeFromArrayRecursive($key, $partialCommand)
     {
         $values = array_get($this->composerFile->read(), $key, null);
 
         if (is_array($values)) {
             foreach ($values as &$value) {
-                if (($arrayKey = array_search($command, $value)) !== false) {
-                    unset($value[$arrayKey]);
-                    $value = array_values($value);
+                foreach ($value as $key => $command) {
+                    if (strpos($command, $partialCommand)) {
+                        unset($value[$key]);
+                        $value = array_values($value);
+                    }
                 }
             }
         }

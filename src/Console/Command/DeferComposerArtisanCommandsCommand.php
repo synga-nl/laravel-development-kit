@@ -22,7 +22,7 @@ class DeferComposerArtisanCommandsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Setup laravel for development';
+    protected $description = 'Executes all the commands specified in the development config';
 
     /**
      * Execute the console command.
@@ -36,13 +36,42 @@ class DeferComposerArtisanCommandsCommand extends Command
         $packages = \Config::get('development.packages');
 
         foreach ($packages as $package) {
-            if (isset($package['composer'][$type . '_commands']['artisan'])) {
-                foreach ($package['composer'][$type . '_commands']['artisan'] as $command) {
-                    if (isset(\Artisan::all()[$command])) {
-                        $this->call($command);
+            $commands = array_get($package, 'composer.commands.' . $type);
+            if (!empty($commands)) {
+                if (isset($commands['artisan'])) {
+                    $this->executeCommands($commands['artisan'], function ($command) {
+                        if (isset(\Artisan::all()[$command])) {
+                            return true;
+                        }
+
+                        return false;
+                    });
+                }
+
+                if (isset($commands['shell'])) {
+                    foreach ($commands['shell'] as $artisanCommand) {
+                        $command = (is_array($artisanCommand)) ? $artisanCommand['command'] : $artisanCommand;
+
+                        // Check if we can make it a bit safer.
+                        exec($command);
                     }
                 }
             }
+        }
+    }
+
+    private function executeCommands($commands, callable $validateCommand = null)
+    {
+        foreach ($commands as $artisanCommand) {
+            $command = (is_array($artisanCommand)) ? $artisanCommand['command'] : $artisanCommand;
+
+            if (null !== $validateCommand) {
+                if (false === $validateCommand($command)) {
+                    continue;
+                }
+            }
+
+            $this->call($command);
         }
     }
 }
