@@ -121,7 +121,7 @@ class RunCommandForPackageCommand extends Command
             $this->info($command->getSynopsis());
             $parameters = $this->ask('Please fill in the command parameters');
 
-            $this->runCommand($command, $parameters);
+            $this->runCommand($command, $parameters, $package, $packageNames);
         }
     }
 }

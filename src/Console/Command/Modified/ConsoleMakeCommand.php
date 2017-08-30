@@ -53,7 +53,7 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
      */
     protected function getPath($name)
     {
-        $this->getPathTrait($name);
+        return $this->getPathTrait($name);
     }
 
     /**
@@ -65,7 +65,7 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
      */
     protected function parseName($name)
     {
-        $this->parseNameTrait($name);
+        return $this->parseNameTrait($name);
     }
 
     /**

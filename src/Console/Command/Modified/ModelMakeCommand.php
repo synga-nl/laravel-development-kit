@@ -53,7 +53,7 @@ class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
      */
     protected function getPath($name)
     {
-        $this->getPathTrait($name);
+        return $this->getPathTrait($name);
     }
 
     /**
@@ -65,7 +65,7 @@ class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
      */
     protected function parseName($name)
     {
-        $this->parseNameTrait($name);
+        return $this->parseNameTrait($name);
     }
 
     /**
