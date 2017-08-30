@@ -46,6 +46,8 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             $packageInstaller->addPhases([
                 new Composer(new ComposerFile('composer.json'))
             ]);
+
+            return $packageInstaller;
         });
 
         if (!empty($packagesConfig)) {
