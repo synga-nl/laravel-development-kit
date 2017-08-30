@@ -2,8 +2,6 @@
     "name": "synga/laravel-development-kit",
     "description": "Development Kit for Laravel to start your projects very easy",
     "type": "library",
-    "require": {
-    },
     "authors": [
         {
             "name": "Synga",

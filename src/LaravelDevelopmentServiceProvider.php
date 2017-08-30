@@ -3,6 +3,8 @@
 namespace Synga\LaravelDevelopment;
 
 use Illuminate\Support\ServiceProvider;
+use Synga\LaravelDevelopment\Installer\PackageInstaller;
+use Synga\LaravelDevelopment\Installer\Phase\Composer;
 
 /**
  * Class LaravelDevelopmentServiceProvider
@@ -31,7 +33,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register any package services.
+     * Register any package services and aliases.
      *
      * @return void
      */
@@ -39,25 +41,41 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
     {
         $packagesConfig = \Config::get('development.packages');
 
+        $this->app->bind(PackageInstaller::class, function () {
+            $packageInstaller = new PackageInstaller();
+            $packageInstaller->addPhases([
+                new Composer(new ComposerFile('composer.json'))
+            ]);
+        });
+
         if (!empty($packagesConfig)) {
-            $production = [];
-            $development = [];
+            $productionServiceProviders = $developmentServiceProviders = $productionAliases = $developmentAliases = [];;
 
             foreach ($packagesConfig as $packageConfig) {
                 if (true === $packageConfig['dev']) {
-                    $development = array_merge($development, $packageConfig['service_providers']);
+                    $developmentServiceProviders = array_merge($developmentServiceProviders,
+                        $packageConfig['service_providers']);
                 } else {
-                    $production = array_merge($production, $packageConfig['service_providers']);
+                    $productionServiceProviders = array_merge($productionServiceProviders,
+                        $packageConfig['service_providers']);
                 }
             }
 
             if ($this->app->environment('production')) {
-                foreach ($production as $productionServiceProvider) {
+                foreach ($productionServiceProviders as $productionServiceProvider) {
                     $this->app->register($productionServiceProvider);
                 }
+
+                foreach ($productionAliases as $productionAliasName => $productionAlias) {
+                    $this->app->alias($productionAliasName, $productionAlias);
+                }
             } else {
-                foreach ($development as $developmentServiceProvider) {
+                foreach ($developmentServiceProviders as $developmentServiceProvider) {
                     $this->app->register($developmentServiceProvider);
+                }
+
+                foreach ($developmentAliases as $developmentAliasName => $developmentAlias) {
+                    $this->app->alias($developmentAliasName, $developmentAlias);
                 }
             }
         }
