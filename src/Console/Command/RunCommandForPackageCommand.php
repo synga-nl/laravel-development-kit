@@ -3,6 +3,7 @@
 namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Finder\Finder;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
@@ -48,8 +49,10 @@ class RunCommandForPackageCommand extends Command
     {
         $packageNames = [];
 
-        foreach (Finder::create()->in($directory)->directories()->depth(1) as $dir) {
-            $packageNames[str_replace($directory . DIRECTORY_SEPARATOR, '', $dir->getPathname())] = $dir;
+        if (file_exists($directory)) {
+            foreach (Finder::create()->in($directory)->directories()->depth(1) as $dir) {
+                $packageNames[str_replace($directory . DIRECTORY_SEPARATOR, '', $dir->getPathname())] = $dir;
+            }
         }
 
         return $packageNames;
@@ -81,6 +84,11 @@ class RunCommandForPackageCommand extends Command
         $directory = base_path($packagesDirectory);
 
         $packageNames = $this->getPackageNames($directory);
+        if (empty($packageNames)) {
+            $this->info('No packages are found');
+            return false;
+        }
+
         $packageNames = array_merge($packageNames, ['exit' => 'exit']);
 
         $commands = $this->getCommands();
@@ -121,7 +129,8 @@ class RunCommandForPackageCommand extends Command
             $this->info($command->getSynopsis());
             $parameters = $this->ask('Please fill in the command parameters');
 
-            $this->runCommand($command, $parameters, $package, $packageNames);
+            $command->setLaravel($this->laravel);
+            $command->run(new StringInput($parameters), $this->output);
         }
     }
 }
