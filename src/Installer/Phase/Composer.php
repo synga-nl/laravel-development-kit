@@ -63,9 +63,9 @@ class Composer implements Phase
 
         if (is_array($values)) {
             foreach ($values as &$value) {
-                foreach ($value as $key => $command) {
+                foreach ($value as $position => $command) {
                     if (strpos($command, $partialCommand)) {
-                        unset($value[$key]);
+                        unset($value[$position]);
                         $value = array_values($value);
                     }
                 }

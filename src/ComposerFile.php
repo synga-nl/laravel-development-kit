@@ -121,7 +121,7 @@ class ComposerFile
             $key = $this->selectors['commands'] . '.' . $event;
 
             $scripts = array_get($this->read(), $key);
-            if (empty($scripts) || in_array($command, $scripts)) {
+            if (is_array($scripts) && in_array($command, $scripts)) {
                 return;
             }
 
