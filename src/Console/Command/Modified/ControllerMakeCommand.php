@@ -5,14 +5,35 @@ namespace Synga\LaravelDevelopment\Console\Command\Modified;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
 /**
- * Class ModelMakeCommand
+ * Class ControllerMakeCommand
  * @package Synga\LaravelDevelopment\Console\Command\Modified
  */
-class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
+class ControllerMakeCommand extends \Illuminate\Routing\Console\ControllerMakeCommand
 {
     use RunCommandTrait, ModifyCommandTrait;
 
-    private $path = 'Database\Model';
+    /**
+     * @var string
+     */
+    private $path = 'Http\Controllers';
+
+    /**
+     * @var string
+     */
+    private $baseController = '<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+
+class Controller extends BaseController
+{
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+}
+';
 
     /**
      * Execute the console command.
@@ -28,6 +49,26 @@ class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
         }
 
         parent::fire();
+    }
+
+    /**
+     * Builds class and creates the base controller when needed
+     *
+     * @param string $name
+     * @return string
+     */
+    protected function buildClass($name)
+    {
+        $result = parent::buildClass($name);
+
+        $namespace = $this->getDefaultNamespace($this->rootNamespace(false));
+        $path = $this->getPathTrait($namespace . '\Controller');
+
+        if (!file_exists($path)) {
+            file_put_contents($path, str_replace('{{ namespace }}', $namespace, $this->baseController));
+        }
+
+        return $result;
     }
 
     /**
@@ -89,8 +130,8 @@ class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
      *
      * @return string
      */
-    protected function rootNamespace()
+    protected function rootNamespace($withTrailingSlash = true)
     {
-        return $this->mandatoryData['root_namespace'];
+        return ($this->mandatoryData['root_namespace'] . ((true === $withTrailingSlash) ? '\\' : ''));
     }
 }

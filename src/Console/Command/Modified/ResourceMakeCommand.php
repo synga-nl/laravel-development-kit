@@ -1,18 +1,20 @@
 <?php
-
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
 use Synga\LaravelDevelopment\RunCommandTrait;
 
 /**
- * Class ModelMakeCommand
+ * Class ResourceMakeCommand
  * @package Synga\LaravelDevelopment\Console\Command\Modified
  */
-class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
+class ResourceMakeCommand extends \Illuminate\Foundation\Console\ResourceMakeCommand
 {
     use RunCommandTrait, ModifyCommandTrait;
 
-    private $path = 'Database\Model';
+    /**
+     * @var string
+     */
+    private $path = 'Resources';
 
     /**
      * Execute the console command.

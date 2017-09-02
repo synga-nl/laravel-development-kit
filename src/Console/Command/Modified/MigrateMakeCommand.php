@@ -29,6 +29,8 @@ class MigrateMakeCommand extends \Illuminate\Database\Console\Migrations\Migrate
     }
 
     /**
+     * Calls a command and checks if we have an overruled command
+     *
      * @param string $command
      * @param array $arguments
      *

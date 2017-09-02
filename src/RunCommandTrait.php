@@ -19,6 +19,8 @@ trait RunCommandTrait
         'make:model' => \Synga\LaravelDevelopment\Console\Command\Modified\ModelMakeCommand::class,
         'make:migration' => \Synga\LaravelDevelopment\Console\Command\Modified\MigrateMakeCommand::class,
         'make:command' => \Synga\LaravelDevelopment\Console\Command\Modified\ConsoleMakeCommand::class,
+        'make:controller' => \Synga\LaravelDevelopment\Console\Command\Modified\ControllerMakeCommand::class,
+        'make:resource' => \Synga\LaravelDevelopment\Console\Command\Modified\ResourceMakeCommand::class
     ];
 
     /**

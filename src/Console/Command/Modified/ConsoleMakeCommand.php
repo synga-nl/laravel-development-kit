@@ -12,6 +12,8 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
 {
     use RunCommandTrait, ModifyCommandTrait;
 
+    private $path = 'Console\Command';
+
     /**
      * Execute the console command.
      *
@@ -29,6 +31,8 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
     }
 
     /**
+     * Calls a command and checks if we have an overruled command
+     *
      * @param string $command
      * @param array $arguments
      *
@@ -77,7 +81,7 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Console\Command';
+        return $rootNamespace . '\\' . $this->path;
     }
 
     /**
