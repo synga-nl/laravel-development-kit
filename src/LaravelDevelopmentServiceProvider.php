@@ -53,13 +53,26 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
         if (!empty($packagesConfig)) {
             $productionServiceProviders = $developmentServiceProviders = $productionAliases = $developmentAliases = [];;
 
+            // @todo This can be done better, lets improve this
             foreach ($packagesConfig as $packageConfig) {
                 if (true === $packageConfig['dev']) {
-                    $developmentServiceProviders = array_merge($developmentServiceProviders,
-                        $packageConfig['service_providers']);
+                    $developmentServiceProviders = array_merge(
+                        $developmentServiceProviders,
+                        $packageConfig['service_providers']
+                    );
+                    $developmentAliases = array_merge(
+                        $developmentAliases,
+                        $packageConfig['aliasses']
+                    );
                 } else {
-                    $productionServiceProviders = array_merge($productionServiceProviders,
-                        $packageConfig['service_providers']);
+                    $productionServiceProviders = array_merge(
+                        $productionServiceProviders,
+                        $packageConfig['service_providers']
+                    );
+                    $productionAliases = array_merge(
+                        $productionAliases,
+                        $packageConfig['aliasses']
+                    );
                 }
             }
 
