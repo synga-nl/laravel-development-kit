@@ -55,8 +55,8 @@ return [
             'service_providers' => [
                 \Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
             ],
-            'aliasses' => [
-                // no aliasses for this package
+            'aliases' => [
+                // no aliases for this package
             ]
         ],
     ],
