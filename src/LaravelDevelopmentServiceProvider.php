@@ -51,47 +51,30 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
         });
 
         if (!empty($packagesConfig)) {
-            $productionServiceProviders = $developmentServiceProviders = $productionAliases = $developmentAliases = [];;
+            $serviceProviders = $aliases = [];;
 
-            // @todo This can be done better, lets improve this
+            $dev = $this->app->environment('local');
+
             foreach ($packagesConfig as $packageConfig) {
-                if (true === $packageConfig['dev']) {
-                    $developmentServiceProviders = array_merge(
-                        $developmentServiceProviders,
-                        $packageConfig['service_providers']
-                    );
-                    $developmentAliases = array_merge(
-                        $developmentAliases,
-                        $packageConfig['aliasses']
-                    );
-                } else {
-                    $productionServiceProviders = array_merge(
-                        $productionServiceProviders,
-                        $packageConfig['service_providers']
-                    );
-                    $productionAliases = array_merge(
-                        $productionAliases,
-                        $packageConfig['aliasses']
-                    );
+                if (true !== $dev && true === $packageConfig['dev']) {
+                    continue;
+                }
+
+                if (isset($packageConfig['service_providers']) && is_array($packageConfig['service_providers'])) {
+                    $serviceProviders = array_merge($serviceProviders, $packageConfig['service_providers']);
+                }
+
+                if (isset($packageConfig['aliases']) && is_array($packageConfig['aliases'])) {
+                    $aliases = array_merge($aliases, $packageConfig['aliases']);
                 }
             }
 
-            if ($this->app->environment('production')) {
-                foreach ($productionServiceProviders as $productionServiceProvider) {
-                    $this->app->register($productionServiceProvider);
-                }
+            foreach ($serviceProviders as $serviceProvider) {
+                $this->app->register($serviceProvider);
+            }
 
-                foreach ($productionAliases as $productionAliasName => $productionAlias) {
-                    $this->app->alias($productionAliasName, $productionAlias);
-                }
-            } else {
-                foreach ($developmentServiceProviders as $developmentServiceProvider) {
-                    $this->app->register($developmentServiceProvider);
-                }
-
-                foreach ($developmentAliases as $developmentAliasName => $developmentAlias) {
-                    $this->app->alias($developmentAliasName, $developmentAlias);
-                }
+            foreach ($aliases as $aliasName => $aliasClass) {
+                $this->app->alias($aliasName, $aliasClass);
             }
         }
     }
