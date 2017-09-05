@@ -63,8 +63,30 @@ return [
 ];
 ```
 
+The basic anatomy of the array is as follows:
+
+- Composer: This is explained below
+- Dev: is the package only needed for the development environment
+- Service provider: specify all service providers needed for this package
+- Aliasses: specify all aliasses needed for this package
+
 With the composer key you can specify the following keys:
  
 - Name: the name of the package. If you want a version constraint you can add a colon (:). For instance 
 barryvdh/laravel-ide-helper:^3.0.
-- Commands: You can add commands 
+- Commands: You can add commands to certain events in composer. A list of events can be found here: 
+https://getcomposer.org/doc/articles/scripts.md. Each event can have two keys: artisan and shell. 
+    - Artisan: an array with command (do not add php artisan) and a key after, which indicates after which command it
+     should be executed.
+    - Shell: an array with the command and after which command it should execute
+
+### Execute commands for a package
+
+This package provides the ```bash php artisan development:command``` command. 
+
+When you execute this command, you get the
+question for which package you want to execute a command. All the packages in the packages directory (made with the package Jeroen-G/packager) are listed. After 
+the selection of the package you get the question which command you want to execute. After the selection of the command 
+you can specify some arguments. After you executed the command the whole process starts again.
+
+
