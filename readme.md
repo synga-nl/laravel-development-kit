@@ -68,7 +68,7 @@ The basic anatomy of the array is as follows:
 - Composer: This is explained below
 - Dev: is the package only needed for the development environment
 - Service provider: specify all service providers needed for this package
-- Aliasses: specify all aliasses needed for this package
+- Aliases: specify all aliases needed for this package
 
 With the composer key you can specify the following keys:
  
