@@ -59,7 +59,9 @@ class MigrateMakeCommand extends \Illuminate\Database\Console\Migrations\Migrate
 
         $path = implode(DIRECTORY_SEPARATOR, [$this->mandatoryData['path'], 'Database', 'Migrations']);
 
-        mkdir($path, 0777, true);
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
 
         return $path;
     }
