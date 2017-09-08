@@ -1,0 +1,20 @@
+<?php
+namespace DummyNamespace;
+
+use Illuminate\Database\Seeder;
+use Synga\LaravelDevelopment\Database\Seeder\ForwardHandleMethod;
+
+class DummyClass extends Seeder
+{
+    use ForwardHandleMethod;
+
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        //
+    }
+}

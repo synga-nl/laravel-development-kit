@@ -28,6 +28,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
                 \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\DeferComposerArtisanCommandsCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\RunCommandForPackageCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\CommandClassCommand::class
             ]);
         }
     }
@@ -39,6 +40,13 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        \Event::listen('Illuminate\Console\Events\CommandStarting', function ($questionMark) {
+            /* @var \Illuminate\Console\Events\CommandStarting $questionMark */
+            if ('db:seed' === $questionMark->command) {
+                \Event::fire('database.seed');
+            }
+        });
+
         $packagesConfig = \Config::get('development.packages');
 
         $this->app->bind(PackageInstaller::class, function () {
