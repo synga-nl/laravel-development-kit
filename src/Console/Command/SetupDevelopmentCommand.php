@@ -43,14 +43,14 @@ class SetupDevelopmentCommand extends Command
      */
     private function getConfiguration()
     {
-        $developmentConfigFile = config_path('development.php');
+        $developmentConfigFile = config_path('packages.php');
 
         if (!file_exists($developmentConfigFile)) {
             $this->call('vendor:publish',
                 ['--provider' => 'Synga\LaravelDevelopment\LaravelDevelopmentServiceProvider']);
-            $developmentConfig = include_once config_path('development.php');
+            $developmentConfig = include_once config_path('packages.php');
         } else {
-            $developmentConfig = \Config::get('development');
+            $developmentConfig = \Config::get('packages');
         }
 
         return new ConfigurationHandler($developmentConfig);

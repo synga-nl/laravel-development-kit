@@ -2,6 +2,8 @@
 
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
+use Illuminate\Console\GeneratorCommand;
+use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
 class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCommand
@@ -11,7 +13,7 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
     /**
      * @var string
      */
-    private $path = 'Database\Migrations';
+    private $path = 'Database\Seeds';
 
     /**
      * Execute the console command.
@@ -26,27 +28,22 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
             }
         }
 
-        $path = base_path('development.json');
-        if (!file_exists($path)) {
-            file_put_contents($path, '');
-        }
+        $developmentFile = new DevelopmentFile('development.json');
+        $seeder = $developmentFile->get('seeder');
 
-        $developmentData = json_decode(file_get_contents($path), true);
-        $seeder = array_get($developmentData,'seeder', []);
-
-        $seeder = array_unique($seeder);
-        foreach($seeder as $key => $seed){
-            if(!class_exists($seed)){
-                unset($seeder[$key]);
+        if (is_array($seeder)) {
+            foreach ($seeder as $key => $seed) {
+                if (!class_exists($seed)) {
+                    unset($seeder[$key]);
+                }
             }
         }
 
         $seeder[] = $this->parseName($this->argument('name'));
+        $seeder = array_unique($seeder);
 
-        array_set($developmentData, 'seeder', array_values($seeder));
-
-
-        file_put_contents($path, json_encode($developmentData));
+        $developmentFile->set('seeder', array_values($seeder));
+        $developmentFile->write();
 
         parent::handle();
     }
@@ -113,5 +110,19 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
     protected function rootNamespace()
     {
         return $this->mandatoryData['root_namespace'];
+    }
+
+    /**
+     * Parse the class name and format according to the root namespace.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function qualifyClass($name)
+    {
+        $reflection = new \ReflectionMethod(GeneratorCommand::class, 'qualifyClass');
+        $reflection->setAccessible(true);
+
+        return $reflection->invoke($this, $name);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Synga\LaravelDevelopment\Installer\Phase;
 
-use Synga\LaravelDevelopment\ComposerFile;
+use Synga\LaravelDevelopment\Files\ComposerFile;
 use Synga\LaravelDevelopment\Installer\ConfigurationHandler;
 
 /**

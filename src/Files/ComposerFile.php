@@ -1,27 +1,13 @@
 <?php
 
-namespace Synga\LaravelDevelopment;
+namespace Synga\LaravelDevelopment\Files;
 
 /**
  * Class ComposerFile
  * @package Synga\LaravelDevelopment
  */
-class ComposerFile
+class ComposerFile extends File
 {
-    /**
-     * The path to the composer file.
-     *
-     * @var string
-     */
-    private $path;
-
-    /**
-     * Configuration of composer for the given file.
-     *
-     * @var array
-     */
-    private $configuration;
-
     /**
      * All possible events composer triggers.
      *
@@ -60,51 +46,11 @@ class ComposerFile
     ];
 
     /**
-     * ComposerFile constructor.
-     * @param $path
+     * @param $data
      */
-    public function __construct($path)
+    public function set($data)
     {
-        $this->path = $path;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function &read()
-    {
-        if (empty($this->configuration)) {
-            $this->configuration = json_decode(file_get_contents($this->path), true);
-        }
-
-        return $this->configuration;
-    }
-
-    /**
-     * @param $configuration
-     */
-    public function set($configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
-     * @return bool|int
-     */
-    public function write()
-    {
-        $configuration = $this->read();
-        if (empty($configuration['require'])) {
-            unset($configuration['require']);
-        }
-
-        return file_put_contents(
-            $this->path,
-            json_encode(
-                $configuration,
-                JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
-            )
-        );
+        $this->data = $data;
     }
 
     /**

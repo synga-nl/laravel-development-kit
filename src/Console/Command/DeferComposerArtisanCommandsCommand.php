@@ -33,7 +33,7 @@ class DeferComposerArtisanCommandsCommand extends Command
     {
         $type = $this->argument('type');
 
-        $packages = \Config::get('development.packages');
+        $packages = \Config::get('packages.packages');
 
         foreach ($packages as $package) {
             $commands = array_get($package, 'composer.commands.' . $type);

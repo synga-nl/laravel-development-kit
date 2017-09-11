@@ -5,6 +5,7 @@ namespace Synga\LaravelDevelopment;
 use Illuminate\Support\ServiceProvider;
 use Synga\LaravelDevelopment\Installer\PackageInstaller;
 use Synga\LaravelDevelopment\Installer\Phase\Composer;
+use Synga\LaravelDevelopment\Files\ComposerFile;
 
 /**
  * Class LaravelDevelopmentServiceProvider
@@ -20,6 +21,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
+            __DIR__ . '/Config/packages.php' => config_path('packages.php'),
             __DIR__ . '/Config/development.php' => config_path('development.php'),
         ]);
 
