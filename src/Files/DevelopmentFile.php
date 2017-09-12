@@ -19,7 +19,7 @@ class DevelopmentFile extends File
 
     public function get($key)
     {
-        array_get($this->read(), $key, []);
+        return array_get($this->read(), $key, []);
     }
 
     public function set($key, $data)

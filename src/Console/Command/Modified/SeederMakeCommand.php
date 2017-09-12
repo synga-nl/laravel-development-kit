@@ -125,4 +125,14 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
 
         return $reflection->invoke($this, $name);
     }
+
+    /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    protected function getStub()
+    {
+        return \Config::get('development.stubs.seeder', __DIR__ . '/../Stubs/seeder.stub');
+    }
 }

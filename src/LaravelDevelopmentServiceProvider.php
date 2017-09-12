@@ -49,7 +49,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             }
         });
 
-        $packagesConfig = \Config::get('development.packages');
+        $packagesConfig = \Config::get('packages');
 
         $this->app->bind(PackageInstaller::class, function () {
             $packageInstaller = new PackageInstaller();

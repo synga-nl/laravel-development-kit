@@ -96,13 +96,13 @@ class RunCommandForPackageCommand extends Command
 
         $package = $this->choice('In which package do you want to work?', array_keys($packageNames));
         if ('exit' === $package) {
-            $this->info('we wish you all good fortune and happiness for the future!');
+            $this->info('We wish you all good fortune and happiness for the future!');
             return false;
         };
 
         $commandName = $this->choice('What is the command you want to execute', array_keys($commands));
         if ('exit' === $commandName) {
-            $this->info('we wish you all good fortune and happiness for the future!');
+            $this->info('We wish you all good fortune and happiness for the future!');
             return false;
         };
 
