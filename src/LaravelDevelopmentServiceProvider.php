@@ -30,7 +30,8 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
                 \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\DeferComposerArtisanCommandsCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\RunCommandForPackageCommand::class,
-                \Synga\LaravelDevelopment\Console\Command\CommandClassCommand::class
+                \Synga\LaravelDevelopment\Console\Command\CommandClassCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\SeedCommand::class
             ]);
         }
     }

@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             $seeds = $developmentFile->get('seeder');
             if (is_array($seeds)) {
                 foreach ($seeds as $seed) {
-                    if (class_exists($seed)) {
+                    if (@class_exists($seed, true)) {
                         $this->call($seed);
                     }
                 }
