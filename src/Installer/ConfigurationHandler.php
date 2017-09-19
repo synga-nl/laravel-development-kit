@@ -32,7 +32,7 @@ class ConfigurationHandler
     {
         $result = [];
 
-        foreach ($this->configuration['packages'] as $config) {
+        foreach ($this->configuration as $config) {
             $result = array_merge_recursive($result, array_get($config, $key, []));
         }
 
@@ -48,7 +48,7 @@ class ConfigurationHandler
     {
         $packages = ['require' => [], 'require_dev' => []];
 
-        foreach ($this->configuration['packages'] as $package) {
+        foreach ($this->configuration as $package) {
             if (isset($package['dev']) && true === $package['dev']) {
                 $type = 'require_dev';
             } else {

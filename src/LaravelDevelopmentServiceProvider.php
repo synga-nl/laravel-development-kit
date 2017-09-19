@@ -81,11 +81,15 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             }
 
             foreach ($serviceProviders as $serviceProvider) {
-                $this->app->register($serviceProvider);
+                if (class_exists($serviceProvider)) {
+                    $this->app->register($serviceProvider);
+                }
             }
 
             foreach ($aliases as $aliasName => $aliasClass) {
-                $this->app->alias($aliasName, $aliasClass);
+                if (class_exists($aliasClass)) {
+                    $this->app->alias($aliasName, $aliasClass);
+                }
             }
         }
     }
