@@ -26,9 +26,9 @@ class DevelopmentFile extends File
      * @param $class
      * @return $this
      */
-    public function addClassAtKey($key, $class)
+    public function addClassAtKey($keyInFile, $class)
     {
-        $seeder = $this->get($key);
+        $seeder = $this->get($keyInFile);
 
         if (is_array($seeder)) {
             foreach ($seeder as $key => $seed) {
@@ -41,7 +41,7 @@ class DevelopmentFile extends File
         $seeder[] = $class;
         $seeder = array_unique($seeder);
 
-        $this->set($key, array_values($seeder));
+        $this->set($keyInFile, array_values($seeder));
 
         return $this;
     }
