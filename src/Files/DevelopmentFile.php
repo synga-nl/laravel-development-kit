@@ -2,6 +2,10 @@
 
 namespace Synga\LaravelDevelopment\Files;
 
+/**
+ * Class DevelopmentFile
+ * @package Synga\LaravelDevelopment\Files
+ */
 class DevelopmentFile extends File
 {
     /**
@@ -17,11 +21,44 @@ class DevelopmentFile extends File
         parent::__construct($path);
     }
 
+    /**
+     * @param $key
+     * @param $class
+     * @return $this
+     */
+    public function addClassAtKey($key, $class)
+    {
+        $seeder = $this->get($key);
+
+        if (is_array($seeder)) {
+            foreach ($seeder as $key => $seed) {
+                if (!class_exists($seed)) {
+                    unset($seeder[$key]);
+                }
+            }
+        }
+
+        $seeder[] = $class;
+        $seeder = array_unique($seeder);
+
+        $this->set($key, array_values($seeder));
+
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
     public function get($key)
     {
         return array_get($this->read(), $key, []);
     }
 
+    /**
+     * @param $key
+     * @param $data
+     */
     public function set($key, $data)
     {
         if (!empty($data)) {

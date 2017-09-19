@@ -28,22 +28,9 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
             }
         }
 
-        $developmentFile = new DevelopmentFile('development.json');
-        $seeder = $developmentFile->get('seeder');
-
-        if (is_array($seeder)) {
-            foreach ($seeder as $key => $seed) {
-                if (!class_exists($seed)) {
-                    unset($seeder[$key]);
-                }
-            }
-        }
-
-        $seeder[] = $this->parseName($this->argument('name'));
-        $seeder = array_unique($seeder);
-
-        $developmentFile->set('seeder', array_values($seeder));
-        $developmentFile->write();
+        (new DevelopmentFile(base_path('development.json')))
+            ->addClassAtKey('seeder', $this->parseName($this->argument('name')))
+            ->write();
 
         parent::handle();
     }

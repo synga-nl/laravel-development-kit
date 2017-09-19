@@ -19,7 +19,7 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
      *
      * @return null|false
      */
-    public function fire()
+    public function handle()
     {
         foreach ($this->mandatoryData as $data) {
             if (empty($data)) {
@@ -27,7 +27,11 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
             }
         }
 
-        parent::fire();
+        (new DevelopmentFile(base_path('development.json')))
+            ->addClassAtKey('command', $this->parseName($this->argument('name')))
+            ->write();
+
+        parent::handle();
     }
 
     /**
