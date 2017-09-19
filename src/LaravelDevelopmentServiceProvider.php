@@ -3,6 +3,7 @@
 namespace Synga\LaravelDevelopment;
 
 use Illuminate\Support\ServiceProvider;
+use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\Installer\PackageInstaller;
 use Synga\LaravelDevelopment\Installer\Phase\Composer;
 use Synga\LaravelDevelopment\Files\ComposerFile;
@@ -26,13 +27,14 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
         ]);
 
         if ($this->app->runningInConsole()) {
-            $this->commands([
+            $developmentFile = new DevelopmentFile(base_path('development.json'));
+            $this->commands(array_merge([
                 \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\DeferComposerArtisanCommandsCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\RunCommandForPackageCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\CommandClassCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\SeedCommand::class
-            ]);
+            ], $developmentFile->get('command')));
         }
     }
 

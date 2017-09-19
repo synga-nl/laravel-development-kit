@@ -2,6 +2,7 @@
 
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
+use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
 /**
