@@ -12,7 +12,7 @@ class DevelopmentFile extends File
      * ComposerFile constructor.
      * @param $path
      */
-    public function __construct($path)
+    public function __construct($path = null)
     {
         if(!file_exists($path)){
             file_put_contents($path, '{}');

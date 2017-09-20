@@ -28,7 +28,7 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
             }
         }
 
-        (new DevelopmentFile(base_path('development.json')))
+        (new DevelopmentFile(\Config::get('development.file'), base_path('development.json')))
             ->addClassAtKey('command', $this->parseName($this->argument('name')))
             ->write();
 

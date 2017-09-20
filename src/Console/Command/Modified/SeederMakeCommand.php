@@ -28,7 +28,7 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
             }
         }
 
-        (new DevelopmentFile(base_path('development.json')))
+        (new DevelopmentFile(\Config::get('development.file'), base_path('development.json')))
             ->addClassAtKey('seeder', $this->parseName($this->argument('name')))
             ->write();
 
@@ -102,7 +102,7 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
     /**
      * Parse the class name and format according to the root namespace.
      *
-     * @param  string  $name
+     * @param  string $name
      * @return string
      */
     protected function qualifyClass($name)
