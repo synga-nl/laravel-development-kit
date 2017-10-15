@@ -8,6 +8,9 @@ return [
         'service_providers' => [
             \JeroenG\Packager\PackagerServiceProvider::class,
         ],
+        'publish' => [
+            '--provider="JeroenG\Packager\PackagerServiceProvider"'
+        ]
     ],
     [
         'composer' => [
@@ -17,6 +20,9 @@ return [
         'service_providers' => [
             \Barryvdh\Debugbar\ServiceProvider::class,
         ],
+        'publish' => [
+            '--provider="Barryvdh\Debugbar\ServiceProvider"'
+        ]
     ],
     [
         'composer' => [
@@ -40,5 +46,8 @@ return [
         'service_providers' => [
             \Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         ],
+        'publish' => [
+            '--provider="Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider" --tag=config'
+        ]
     ],
 ];

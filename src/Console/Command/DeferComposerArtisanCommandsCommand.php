@@ -3,6 +3,7 @@
 namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
+use Synga\LaravelDevelopment\Console\ApproveExecCommand;
 
 /**
  * Class DeferComposerArtisanCommandsCommand
@@ -53,13 +54,19 @@ class DeferComposerArtisanCommandsCommand extends Command
                         $command = (is_array($artisanCommand)) ? $artisanCommand['command'] : $artisanCommand;
 
                         // Check if we can make it a bit safer.
-                        exec($command);
+                        ApproveExecCommand::exec($command);
                     }
                 }
             }
         }
     }
 
+    /**
+     * Executes an artisan command
+     *
+     * @param $commands
+     * @param callable|null $validateCommand
+     */
     private function executeCommands($commands, callable $validateCommand = null)
     {
         foreach ($commands as $artisanCommand) {

@@ -2,11 +2,14 @@
 
 namespace Synga\LaravelDevelopment;
 
+use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
+use Synga\LaravelDevelopment\Console\ApproveExecCommand;
 use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\Installer\PackageInstaller;
 use Synga\LaravelDevelopment\Installer\Phase\Composer;
 use Synga\LaravelDevelopment\Files\ComposerFile;
+use Synga\LaravelDevelopment\Installer\Phase\PublishResources;
 
 /**
  * Class LaravelDevelopmentServiceProvider
@@ -35,6 +38,15 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
                 \Synga\LaravelDevelopment\Console\Command\CommandClassCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\SeedCommand::class
             ], $developmentFile->get('command')));
+
+            \Event::listen(CommandStarting::class, function (CommandStarting $event) {
+                ApproveExecCommand::setInputOutput($event->input, $event->output);
+
+                /* @var CommandStarting $event */
+                if ('db:seed' === $event->command) {
+                    \Event::fire('database.seed');
+                }
+            });
         }
     }
 
@@ -45,23 +57,25 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        \Event::listen('Illuminate\Console\Events\CommandStarting', function ($questionMark) {
-            /* @var \Illuminate\Console\Events\CommandStarting $questionMark */
-            if ('db:seed' === $questionMark->command) {
-                \Event::fire('database.seed');
-            }
-        });
-
-        $packagesConfig = \Config::get('packages');
-
         $this->app->bind(PackageInstaller::class, function () {
             $packageInstaller = new PackageInstaller();
             $packageInstaller->addPhases([
-                new Composer(new ComposerFile('composer.json'))
+                new Composer(new ComposerFile('composer.json')),
+                new PublishResources(),
             ]);
 
             return $packageInstaller;
         });
+
+        $this->registerPackages();
+    }
+
+    /**
+     * Registers all packages registered with LDK
+     */
+    protected function registerPackages()
+    {
+        $packagesConfig = \Config::get('packages');
 
         if (!empty($packagesConfig)) {
             $serviceProviders = $aliases = [];;

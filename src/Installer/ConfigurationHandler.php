@@ -55,8 +55,11 @@ class ConfigurationHandler
                 $type = 'require';
             }
 
-            $packages[$type][] = $package['composer']['name'];
+            if (isset($package['composer'])) {
+                $packages[$type][] = $package['composer']['name'];
+            }
         }
+
         return $packages;
     }
 }
