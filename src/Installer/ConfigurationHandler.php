@@ -48,16 +48,24 @@ class ConfigurationHandler
     {
         $packages = ['require' => [], 'require_dev' => []];
 
-        foreach ($this->configuration as $package) {
+        foreach ($this->configuration as $name => $package) {
+            if ('options' === $name) {
+                continue;
+            }
+
             if (isset($package['dev']) && true === $package['dev']) {
                 $type = 'require_dev';
             } else {
                 $type = 'require';
             }
 
-            if (isset($package['composer'])) {
-                $packages[$type][] = $package['composer']['name'];
+            if (isset($package['composer'], $package['composer']['version'])) {
+                $packages[$type][] = $name . ':' . $package['composer']['version'];
+
+                continue;
             }
+
+            $packages[$type][] = $name;
         }
 
         return $packages;

@@ -30,9 +30,9 @@ an array.
 ```php 
 return [
     'packages' => [
-        [
+        'barryvdh/laravel-ide-helper' => [
             'composer' => [
-                'name' => 'barryvdh/laravel-ide-helper',
+                'version' => '^3.1',
                 'commands' => [
                     'post-update-cmd' => [
                         'artisan' => [
