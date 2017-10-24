@@ -49,7 +49,7 @@ class ConfigurationHandler
         $packages = ['require' => [], 'require_dev' => []];
 
         foreach ($this->configuration as $name => $package) {
-            if ('options' === $name) {
+            if (false !== strpos($name, '/')) {
                 continue;
             }
 
