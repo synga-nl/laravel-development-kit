@@ -1,6 +1,10 @@
 <?php
 namespace Synga\LaravelDevelopment\Packages\Configuration\Merge;
 
+/**
+ * Trait MultipleKeys
+ * @package Synga\LaravelDevelopment\Packages\Configuration\Merge
+ */
 trait MultipleKeys
 {
     /** @var */
@@ -16,7 +20,7 @@ trait MultipleKeys
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getKey()
     {

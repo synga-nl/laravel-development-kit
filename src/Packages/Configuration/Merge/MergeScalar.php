@@ -1,7 +1,7 @@
 <?php
 namespace Synga\LaravelDevelopment\Packages\Configuration\Merge;
 
-class MergeScalar implements Configuration
+class MergeScalar implements ConfigurationMerger
 {
     use MultipleKeys;
 

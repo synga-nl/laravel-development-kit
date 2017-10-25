@@ -5,7 +5,7 @@ namespace Synga\LaravelDevelopment\Packages\Configuration\Merge;
  * Class MergeComposer
  * @package Synga\LaravelDevelopment\Packages\Configuration\Merge
  */
-class MergeComposer implements Configuration
+class MergeComposer implements ConfigurationMerger
 {
     /**
      * @var array

@@ -25,40 +25,38 @@ package.
 ### Install packages
 
 In the development.php config file you can specify which packages should be installed. You can do this by providing 
-an array.
+an array. The array key starts with the name of the package (from Packagist).
 
 ```php 
 return [
-    'packages' => [
-        'barryvdh/laravel-ide-helper' => [
-            'composer' => [
-                'version' => '^3.1',
-                'commands' => [
-                    'post-update-cmd' => [
-                        'artisan' => [
-                            ['command' => 'ide-helper:generate', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall'],
-                            ['command' => 'ide-helper:meta', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall']
-                        ],
-                        'shell' => [
-                            // No shell commands for this package
-                        ]
+    'barryvdh/laravel-ide-helper' => [
+        'composer' => [
+            'version' => '^3.1',
+            'commands' => [
+                'post-update-cmd' => [
+                    'artisan' => [
+                        ['command' => 'ide-helper:generate', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall'],
+                        ['command' => 'ide-helper:meta', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall']
                     ],
-                    'post-install-cmd' => [
-                        'artisan' => [
-                            ['command' => 'ide-helper:generate', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall'],
-                            ['command' => 'ide-helper:meta', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall']
-                        ],
+                    'shell' => [
+                        // No shell commands for this package
                     ]
                 ],
+                'post-install-cmd' => [
+                    'artisan' => [
+                        ['command' => 'ide-helper:generate', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall'],
+                        ['command' => 'ide-helper:meta', 'after' => 'Illuminate\\Foundation\\ComposerScripts::postInstall']
+                    ],
+                ]
             ],
-            'dev' => true,
-            'service_providers' => [
-                \Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-            ],
-            'aliases' => [
-                // no aliases for this package
-            ]
         ],
+        'dev' => true,
+        'service_providers' => [
+            \Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        ],
+        'aliases' => [
+            // no aliases for this package
+        ]
     ],
 ];
 ```
@@ -72,8 +70,7 @@ The basic anatomy of the array is as follows:
 
 With the composer key you can specify the following keys:
  
-- Name: the name of the package. If you want a version constraint you can add a colon (:). For instance 
-barryvdh/laravel-ide-helper:^3.0.
+- Version: You can add any version constraint supported by Composer.
 - Commands: You can add commands to certain events in composer. A list of events can be found here: 
 https://getcomposer.org/doc/articles/scripts.md. Each event can have two keys: artisan and shell. 
     - Artisan: an array with command (do not add php artisan) and a key after, which indicates after which command it

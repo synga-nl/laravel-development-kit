@@ -1,7 +1,7 @@
 <?php
 namespace Synga\LaravelDevelopment\Packages\Configuration\Merge;
 
-class MergeArrayRecursive implements Configuration
+class MergeArrayRecursive implements ConfigurationMerger
 {
     use MultipleKeys;
 

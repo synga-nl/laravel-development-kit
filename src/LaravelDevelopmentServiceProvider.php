@@ -10,6 +10,10 @@ use Synga\LaravelDevelopment\Installer\PackageInstaller;
 use Synga\LaravelDevelopment\Installer\Phase\Composer;
 use Synga\LaravelDevelopment\Files\ComposerFile;
 use Synga\LaravelDevelopment\Installer\Phase\PublishResources;
+use Synga\LaravelDevelopment\Packages\Configuration\Merge\MergeArray;
+use Synga\LaravelDevelopment\Packages\Configuration\Merge\MergeComposer;
+use Synga\LaravelDevelopment\Packages\Configuration\Merge\MergeScalar;
+use Synga\LaravelDevelopment\Packages\Configuration\MergeConfiguration;
 
 /**
  * Class LaravelDevelopmentServiceProvider
@@ -65,6 +69,16 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             ]);
 
             return $packageInstaller;
+        });
+
+        $this->app->bind(MergeConfiguration::class, function () {
+            $mergeConfiguration = new MergeConfiguration();
+            $mergeConfiguration
+                ->addMergeHandler(new MergeComposer())
+                ->addMergeHandler(new MergeArray(['service_providers', 'aliases']))
+                ->addMergeHandler(new MergeScalar(['dev']));
+
+            return $mergeConfiguration;
         });
 
         $this->registerPackages();
