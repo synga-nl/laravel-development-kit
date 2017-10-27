@@ -5,6 +5,7 @@ namespace Synga\LaravelDevelopment\Installer\Phase;
 use Synga\LaravelDevelopment\Console\ApproveExecCommand;
 use Synga\LaravelDevelopment\Files\ComposerFile;
 use Synga\LaravelDevelopment\Installer\ConfigurationHandler;
+use Synga\LaravelDevelopment\Installer\PackagesFinder;
 
 /**
  * Class Composer
@@ -46,10 +47,19 @@ class Composer implements Phase
 
         $this->composerFile->write();
 
+        $this->getPackagesByComposerFiles();
+
         $packages = $configuration->getPackagesByEnvironment();
 
         $this->requirePackages($packages['require_dev'], true);
         $this->requirePackages($packages['require'], false);
+    }
+
+    protected function getPackagesByComposerFiles()
+    {
+        foreach (PackagesFinder::findComposerFiles() as $packageName => $composerFile) {
+            $composerFile = json_decode(file_get_contents($composerFile->getPathname()), true);
+        }
     }
 
     /**
