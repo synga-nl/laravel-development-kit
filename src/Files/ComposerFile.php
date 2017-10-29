@@ -4,7 +4,7 @@ namespace Synga\LaravelDevelopment\Files;
 
 /**
  * Class ComposerFile
- * @package Synga\LaravelDevelopment
+ * @package Synga\LaravelDevelopment\Files
  */
 class ComposerFile extends File
 {
@@ -46,20 +46,12 @@ class ComposerFile extends File
     ];
 
     /**
-     * @param $data
+     * @param string $command
+     * @param string $event
+     * @param string|null $after
+     * @return bool
      */
-    public function set($data)
-    {
-        $this->data = $data;
-    }
-
-    /**
-     * @param $command
-     * @param $event
-     * @param null $after
-     * @return bool|mixed
-     */
-    public function addCommand($command, $event, $after = null)
+    public function addCommand(string $command, string $event, string $after = null)
     {
         $added = false;
 
@@ -98,5 +90,42 @@ class ComposerFile extends File
         }
 
         return true;
+    }
+
+    /**
+     * @param string $package
+     * @return bool
+     */
+    public function hasPackageInFile(string $package)
+    {
+        $packages = array_merge($this->get('require', []), $this->get('require_dev', []));
+
+        return isset($packages[$package]);
+    }
+
+    /**
+     * @param bool $production
+     * @param bool $devevlopment
+     * @return array
+     */
+    public function getPackages(bool $production = true, bool $devevlopment = false)
+    {
+        $packages = array_merge(
+            (true === $production) ? $this->get('require') : [],
+            (true === $devevlopment) ? $this->get('require-dev') : []
+        );
+
+        $result = [];
+
+        foreach ($packages as $packageName => $packageVersion) {
+            if (false !== strpos($packageName, '/')) {
+                $result[] = [
+                    'name' => $packageName,
+                    'version' => $packageVersion
+                ];
+            }
+        }
+
+        return $result;
     }
 }

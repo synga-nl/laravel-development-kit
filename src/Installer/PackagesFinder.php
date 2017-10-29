@@ -43,6 +43,7 @@ class PackagesFinder
         $packageNames = [];
 
         foreach (self::getFinder($directory)->directories()->depth(1) as $dir) {
+            /* @var $dir \Symfony\Component\Finder\SplFileInfo */
             $packageNames[str_replace(self::getDirectory($directory) . DIRECTORY_SEPARATOR, '', $dir->getPathname())] = $dir;
         }
 

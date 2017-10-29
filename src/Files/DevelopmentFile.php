@@ -22,11 +22,11 @@ class DevelopmentFile extends File
     }
 
     /**
-     * @param $key
-     * @param $class
+     * @param string $keyInFile
+     * @param string $class
      * @return $this
      */
-    public function addClassAtKey($keyInFile, $class)
+    public function addClassAtKey(string $keyInFile, string $class)
     {
         $seeder = $this->get($keyInFile);
 
@@ -44,25 +44,5 @@ class DevelopmentFile extends File
         $this->set($keyInFile, array_values($seeder));
 
         return $this;
-    }
-
-    /**
-     * @param $key
-     * @return mixed
-     */
-    public function get($key)
-    {
-        return array_get($this->read(), $key, []);
-    }
-
-    /**
-     * @param $key
-     * @param $data
-     */
-    public function set($key, $data)
-    {
-        if (!empty($data)) {
-            array_set($this->read(), $key, $data);
-        }
     }
 }

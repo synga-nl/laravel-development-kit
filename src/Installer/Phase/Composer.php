@@ -2,8 +2,10 @@
 
 namespace Synga\LaravelDevelopment\Installer\Phase;
 
+use Illuminate\Support\Collection;
 use Synga\LaravelDevelopment\Console\ApproveExecCommand;
 use Synga\LaravelDevelopment\Files\ComposerFile;
+use Synga\LaravelDevelopment\Files\ComposerLockFile;
 use Synga\LaravelDevelopment\Installer\ConfigurationHandler;
 use Synga\LaravelDevelopment\Installer\PackagesFinder;
 
@@ -13,18 +15,21 @@ use Synga\LaravelDevelopment\Installer\PackagesFinder;
  */
 class Composer implements Phase
 {
-    /**
-     * @var ComposerFile
-     */
+    /** @var ComposerFile */
     private $composerFile;
+
+    /** @var ComposerLockFile */
+    private $composerLockFile;
 
     /**
      * Composer constructor.
      * @param ComposerFile $composerFile
+     * @param ComposerLockFile $composerLockFile
      */
-    public function __construct(ComposerFile $composerFile)
+    public function __construct(ComposerFile $composerFile, ComposerLockFile $composerLockFile)
     {
         $this->composerFile = $composerFile;
+        $this->composerLockFile = $composerLockFile;
     }
 
     /**
@@ -47,19 +52,43 @@ class Composer implements Phase
 
         $this->composerFile->write();
 
-        $this->getPackagesByComposerFiles();
+        $this->getPackagesFromComposerFiles();
+        exit();
 
         $packages = $configuration->getPackagesByEnvironment();
 
-        $this->requirePackages($packages['require_dev'], true);
-        $this->requirePackages($packages['require'], false);
+        $this->requirePackages($packages['production'], true);
+        $this->requirePackages($packages['development'], false);
     }
 
-    protected function getPackagesByComposerFiles()
+    protected function getPackagesFromComposerFiles()
     {
-        foreach (PackagesFinder::findComposerFiles() as $packageName => $composerFile) {
-            $composerFile = json_decode(file_get_contents($composerFile->getPathname()), true);
+        $result = ['production' => [], 'development' => []];
+
+        foreach (PackagesFinder::findComposerFiles() as $packageName => $composerFiles) {
+            foreach ($composerFiles as $composerFile) {
+                /* @var $composerFile \Symfony\Component\Finder\SplFileInfo */
+                $composerFile = new ComposerFile($composerFile->getPathname());
+
+                $result['production'] = new Collection($composerFile->getPackages(true, false));
+                $result['development'] = new Collection($composerFile->getPackages(false, true));
+
+                var_dump($result['production']->filter(function($item){
+                    return $this->isInComposerLockFile($item['name']);
+                }));
+
+//                dd($result['development']->pluck('name')->each(function($index, $item){
+//                    return $this->isInComposerLockFile($item);
+//                }));
+            }
         }
+
+        return $result;
+    }
+
+    protected function isInComposerLockFile($packageName)
+    {
+        return $this->composerLockFile->hasPackageInFile($packageName);
     }
 
     /**

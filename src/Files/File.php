@@ -1,6 +1,10 @@
 <?php
 namespace Synga\LaravelDevelopment\Files;
 
+/**
+ * Class File
+ * @package Synga\LaravelDevelopment\Files
+ */
 abstract class File
 {
     /**
@@ -23,10 +27,16 @@ abstract class File
      */
     public function __construct($path)
     {
+        if (!file_exists($path)) {
+            throw new \InvalidArgumentException('The given path "' . $path . '" is not valid');
+        }
+
         $this->path = $path;
     }
 
     /**
+     * Reads the JSON file
+     *
      * @return mixed
      */
     public function &read()
@@ -39,6 +49,8 @@ abstract class File
     }
 
     /**
+     * Writes the modified file to the given path
+     *
      * @return bool|int
      */
     public function write()
@@ -55,5 +67,39 @@ abstract class File
                 JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE
             )
         );
+    }
+
+    /**
+     * Gets a value from the data of the current object
+     *
+     * @param $key
+     * @param $default
+     * @return mixed
+     */
+    public function get($key, $default = [])
+    {
+        return array_get($this->read(), $key, $default);
+    }
+
+    /**
+     * Sets a value in the data of the current object
+     *
+     * @param $key
+     * @param $data
+     * @return array
+     */
+    public function set($key, $data)
+    {
+        return array_set($this->read(), $key, $data);
+    }
+
+    /**
+     * Sets the given data as data of the object, if it needs to be written to the file, call the method write.
+     *
+     * @param $data
+     */
+    public function setFileContents($data)
+    {
+        $this->data = $data;
     }
 }

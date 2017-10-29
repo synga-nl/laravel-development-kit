@@ -46,7 +46,7 @@ class ConfigurationHandler
      */
     public function getPackagesByEnvironment()
     {
-        $packages = ['require' => [], 'require_dev' => []];
+        $packages = ['production' => [], 'development' => []];
 
         foreach ($this->configuration as $name => $package) {
             if (false !== strpos($name, '/')) {
@@ -54,9 +54,9 @@ class ConfigurationHandler
             }
 
             if (isset($package['dev']) && true === $package['dev']) {
-                $type = 'require_dev';
+                $type = 'development';
             } else {
-                $type = 'require';
+                $type = 'production';
             }
 
             if (isset($package['composer'], $package['composer']['version'])) {

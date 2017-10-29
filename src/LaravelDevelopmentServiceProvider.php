@@ -5,6 +5,7 @@ namespace Synga\LaravelDevelopment;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
 use Synga\LaravelDevelopment\Console\ApproveExecCommand;
+use Synga\LaravelDevelopment\Files\ComposerLockFile;
 use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\Installer\PackageInstaller;
 use Synga\LaravelDevelopment\Installer\Phase\Composer;
@@ -64,7 +65,10 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
         $this->app->bind(PackageInstaller::class, function () {
             $packageInstaller = new PackageInstaller();
             $packageInstaller->addPhases([
-                new Composer(new ComposerFile('composer.json')),
+                new Composer(
+                    new ComposerFile('composer.json'),
+                    new ComposerLockFile('composer.lock')
+                ),
                 new PublishResources(),
             ]);
 
