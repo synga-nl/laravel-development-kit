@@ -1,4 +1,5 @@
 <?php
+
 namespace Synga\LaravelDevelopment\Console;
 
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -85,7 +86,13 @@ class ApproveExecCommand
             );
 
             $confirmed = in_array($answer, $confirmValues);
-            if (false === $confirmed && !in_array($answer, $rejectValues)) {
+            $inRejectValues = in_array($answer, $rejectValues);
+
+            if (true === $inRejectValues) {
+                return false;
+            }
+
+            if (false === $confirmed) {
                 self::$currentRetries++;
             }
 
@@ -98,7 +105,7 @@ class ApproveExecCommand
             if (true === $confirmed) {
                 self::$currentRetries = 0;
 
-                return $confirmed;
+                return true;
             }
         }
     }

@@ -44,12 +44,15 @@ class ConfigurationHandler
      *
      * @return array
      */
-    public function getPackagesByEnvironment()
+    public function getPackagesByEnvironment($existingPackages = [])
     {
-        $packages = ['production' => [], 'development' => []];
+        $packages = [
+            'production' => (isset($existingPackages['production'])) ? $existingPackages['production'] : [],
+            'development' => (isset($existingPackages['development'])) ? $existingPackages['development'] : []
+        ];
 
         foreach ($this->configuration as $name => $package) {
-            if (false !== strpos($name, '/')) {
+            if (false === strpos($name, '/')) {
                 continue;
             }
 

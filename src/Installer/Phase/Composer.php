@@ -52,10 +52,9 @@ class Composer implements Phase
 
         $this->composerFile->write();
 
-        $this->getPackagesFromComposerFiles();
-        exit();
+        $packages = $this->getPackagesFromComposerFiles();
 
-        $packages = $configuration->getPackagesByEnvironment();
+        $packages = $configuration->getPackagesByEnvironment($packages);
 
         $this->requirePackages($packages['production'], true);
         $this->requirePackages($packages['development'], false);
@@ -63,32 +62,40 @@ class Composer implements Phase
 
     protected function getPackagesFromComposerFiles()
     {
-        $result = ['production' => [], 'development' => []];
+        $callbackIsInLockFile = function ($item) {
+            return !$this->isInComposerLockFile($item['name']);
+        };
+
+        $calbackCombineNameAndVersion = function ($item) {
+            return $item['name'] . ':' . $item['version'];
+        };
+
+        $production = new Collection();
+        $development = new Collection();
 
         foreach (PackagesFinder::findComposerFiles() as $packageName => $composerFiles) {
             foreach ($composerFiles as $composerFile) {
                 /* @var $composerFile \Symfony\Component\Finder\SplFileInfo */
                 $composerFile = new ComposerFile($composerFile->getPathname());
 
-                $result['production'] = new Collection($composerFile->getPackages(true, false));
-                $result['development'] = new Collection($composerFile->getPackages(false, true));
-
-                var_dump($result['production']->filter(function($item){
-                    return $this->isInComposerLockFile($item['name']);
-                }));
-
-//                dd($result['development']->pluck('name')->each(function($index, $item){
-//                    return $this->isInComposerLockFile($item);
-//                }));
+                $production = $production
+                    ->merge((new Collection($composerFile->getPackages(true, false)))
+                        ->filter($callbackIsInLockFile));
+                $development = $development
+                    ->merge((new Collection($composerFile->getPackages(false, true)))
+                        ->filter($callbackIsInLockFile));
             }
         }
 
-        return $result;
+        $production = $production->unique('name')->map($calbackCombineNameAndVersion)->toArray();
+        $development = $development->unique('name')->map($calbackCombineNameAndVersion)->toArray();
+
+        return ['production' => $production, 'development' => $development];
     }
 
     protected function isInComposerLockFile($packageName)
     {
-        return $this->composerLockFile->hasPackageInFile($packageName);
+        return $this->composerLockFile->isPackageInFile($packageName);
     }
 
     /**
