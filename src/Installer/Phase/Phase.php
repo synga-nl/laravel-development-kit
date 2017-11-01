@@ -16,4 +16,11 @@ interface Phase
      * @return mixed
      */
     public function handle(ConfigurationHandler $configuration);
+
+    /**
+     * Use no approval for a shell command for this phase.
+     *
+     * @return void
+     */
+    public function skipApproval();
 }

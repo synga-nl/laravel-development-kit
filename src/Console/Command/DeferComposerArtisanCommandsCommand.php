@@ -16,7 +16,7 @@ class DeferComposerArtisanCommandsCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'development:commands {type}';
+    protected $signature = 'development:commands {type} {--skip-approval}';
 
     /**
      * The console command description.
@@ -53,8 +53,7 @@ class DeferComposerArtisanCommandsCommand extends Command
                     foreach ($commands['shell'] as $artisanCommand) {
                         $command = (is_array($artisanCommand)) ? $artisanCommand['command'] : $artisanCommand;
 
-                        // Check if we can make it a bit safer.
-                        ApproveExecCommand::exec($command);
+                        ApproveExecCommand::exec($command, $this->option('skip-approval'));
                     }
                 }
             }

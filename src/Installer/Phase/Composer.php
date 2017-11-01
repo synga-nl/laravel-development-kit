@@ -15,6 +15,9 @@ use Synga\LaravelDevelopment\Installer\PackagesFinder;
  */
 class Composer implements Phase
 {
+    /** @var bool */
+    private $skipApproval = false;
+
     /** @var ComposerFile */
     private $composerFile;
 
@@ -60,10 +63,20 @@ class Composer implements Phase
         $this->requirePackages($packages['development'], false);
     }
 
+    public function skipApproval()
+    {
+        $this->skipApproval = true;
+    }
+
+    /**
+     * Filters composer packages from the composer.json file in laravel packages
+     *
+     * @return array
+     */
     protected function getPackagesFromComposerFiles()
     {
-        $callbackIsInLockFile = function ($item) {
-            return !$this->isInComposerLockFile($item['name']);
+        $callbackIsInLockFile = function ($package) {
+            return !$this->composerLockFile->isPackageInFile($package['name']);
         };
 
         $calbackCombineNameAndVersion = function ($item) {
@@ -79,11 +92,9 @@ class Composer implements Phase
                 $composerFile = new ComposerFile($composerFile->getPathname());
 
                 $production = $production
-                    ->merge((new Collection($composerFile->getPackages(true, false)))
-                        ->filter($callbackIsInLockFile));
+                    ->merge((new Collection($composerFile->getPackages(true, false)))->filter($callbackIsInLockFile));
                 $development = $development
-                    ->merge((new Collection($composerFile->getPackages(false, true)))
-                        ->filter($callbackIsInLockFile));
+                    ->merge((new Collection($composerFile->getPackages(false, true)))->filter($callbackIsInLockFile));
             }
         }
 
@@ -91,11 +102,6 @@ class Composer implements Phase
         $development = $development->unique('name')->map($calbackCombineNameAndVersion)->toArray();
 
         return ['production' => $production, 'development' => $development];
-    }
-
-    protected function isInComposerLockFile($packageName)
-    {
-        return $this->composerLockFile->isPackageInFile($packageName);
     }
 
     /**
@@ -143,7 +149,7 @@ class Composer implements Phase
                 $command .= escapeshellarg($package) . ' ';
             }
 
-            ApproveExecCommand::exec($command);
+            ApproveExecCommand::exec($command, $this->skipApproval);
         }
     }
 }

@@ -10,10 +10,14 @@ use Synga\LaravelDevelopment\Installer\ConfigurationHandler;
  */
 class PublishResources implements Phase
 {
+    /** @var bool */
+    protected $skipApproval = false;
+
     /**
      * Executes all publish commands specified in the packages.php file.
      *
      * @param ConfigurationHandler $configuration
+     * @return void
      */
     public function handle(ConfigurationHandler $configuration)
     {
@@ -25,13 +29,18 @@ class PublishResources implements Phase
         }
     }
 
+    public function skipApproval()
+    {
+        $this->skipApproval = true;
+    }
+
     /**
      * Converts a string into arguments to execute a artisan command.
      *
-     * @param $commandString
+     * @param string $commandString
      * @return array
      */
-    protected function convertCommandString($commandString)
+    protected function convertCommandString(string $commandString)
     {
         $arguments = [];
 

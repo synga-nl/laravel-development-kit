@@ -54,13 +54,18 @@ class ApproveExecCommand
     /**
      * Executes a shell command if the user approves the command
      *
-     * @param $command
-     * @param $output
-     * @param $returnVar
+     * @param string $command
+     * @param bool $skipApproval
+     * @param array|null $output
+     * @param int|null $returnVar
      */
-    public static function exec($command, &$output = null, &$returnVar = null)
+    public static function exec(string $command, bool $skipApproval = false, array &$output = null, integer &$returnVar = null)
     {
-        $answer = self::ask($command, 'y');
+        if(false === $skipApproval) {
+            $answer = self::ask($command, 'y');
+        } else {
+            $answer = true;
+        }
 
         if (true === $answer) {
             exec($command, $output, $returnVar);

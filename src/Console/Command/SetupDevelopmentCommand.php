@@ -17,7 +17,7 @@ class SetupDevelopmentCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'development:setup';
+    protected $signature = 'development:setup {--skip-approval}';
 
     /**
      * The console command description.
@@ -35,7 +35,7 @@ class SetupDevelopmentCommand extends Command
     {
         $configuration = $this->getConfiguration();
 
-        $packageInstaller->install($configuration);
+        $packageInstaller->install($configuration, $this->option('skip-approval'));
     }
 
     /**

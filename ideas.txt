@@ -1,10 +1,10 @@
 - (Added) Add option to verify all commands which are executed with function "exec"
 - (Added) Add "publish" key to configuration so you can publish the files a package needs
-- Add functionality to combine all composer.json files in all packages and require them.
+- (Added) Add functionality to combine all composer.json files in all packages and require them.
 - (Added) Add functionality to 
 - Add call to fetch a packages.php file from a server/api like docker has.
-- Add functionality to create a project from scratch with all the needed packages and install them. (use inheritance from other packages.php files)
-- Make the approval of commands optional
+- Add functionality to create a project from scratch with all the needed packages and install them. (use inheritance from other packages.php files like docker)
+- (Added) Make the approval of commands optional
 
 
 

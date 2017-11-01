@@ -43,10 +43,15 @@ class PackageInstaller
      * Runs every phase added to the object.
      *
      * @param ConfigurationHandler $configuration
+     * @param bool $skipApproval
      */
-    public function install(ConfigurationHandler $configuration)
+    public function install(ConfigurationHandler $configuration, bool $skipApproval = false)
     {
         foreach ($this->phases as $phase) {
+            if(true === $skipApproval){
+                $phase->skipApproval();
+            }
+
             $phase->handle($configuration);
         }
     }
