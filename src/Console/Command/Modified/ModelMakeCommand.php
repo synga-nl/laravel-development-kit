@@ -31,6 +31,17 @@ class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
     }
 
     /**
+     * Adds file to git after creation
+     */
+    public function handle(){
+        parent::handle();
+
+        $pathName = $this->getPath($this->parseName($this->argument('name')));
+
+        $this->addFileToGit($pathName);
+    }
+
+    /**
      * Calls a command and checks if we have an overruled command
      *
      * @param string $command

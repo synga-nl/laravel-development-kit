@@ -28,11 +28,16 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
             }
         }
 
-        (new DevelopmentFile(\Config::get('development.file'), base_path('development.json')))
-            ->addClassAtKey('seeder', $this->parseName($this->argument('name')))
+        $className = $this->parseName($this->argument('name'));
+
+        (new DevelopmentFile(\Config::get('development.file', base_path('development.json'))))
+            ->addClassAtKey('seeder', $className)
             ->write();
 
+
         parent::handle();
+
+        $this->addFileToGit($this->getPath($className));
     }
 
     /**

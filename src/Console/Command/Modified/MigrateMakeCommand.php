@@ -29,6 +29,17 @@ class MigrateMakeCommand extends \Illuminate\Database\Console\Migrations\Migrate
     }
 
     /**
+     * Adds file to git after creation
+     */
+    public function handle(){
+        parent::handle();
+
+        $pathName = $this->getMigrationPath();
+
+        $this->addFileToGit($pathName);
+    }
+
+    /**
      * Calls a command and checks if we have an overruled command
      *
      * @param string $command
@@ -62,6 +73,8 @@ class MigrateMakeCommand extends \Illuminate\Database\Console\Migrations\Migrate
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
+
+        $this->addFileToGit($path);
 
         return $path;
     }

@@ -52,6 +52,17 @@ class Controller extends BaseController
     }
 
     /**
+     * Adds file to git after creation
+     */
+    public function handle(){
+        parent::handle();
+
+        $pathName = $this->getPath($this->parseName($this->argument('name')));
+
+        $this->addFileToGit($pathName);
+    }
+
+    /**
      * Builds class and creates the base controller when needed
      *
      * @param string $name
@@ -67,6 +78,8 @@ class Controller extends BaseController
         if (!file_exists($path)) {
             file_put_contents($path, str_replace('{{ namespace }}', $namespace, $this->baseController));
         }
+
+        $this->addFileToGit($path);
 
         return $result;
     }

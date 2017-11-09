@@ -66,4 +66,14 @@ trait RunCommandTrait
 
         return new ArrayInput((is_array($input) ? $input : []));
     }
+
+    /**
+     * @param string $pathName
+     */
+    protected function addFileToGit(string $pathName)
+    {
+        if (file_exists(base_path('.git')) && file_exists($pathName)) {
+            exec(sprintf('cd %s && git add %s', escapeshellarg(base_path()), escapeshellarg($pathName)));
+        }
+    }
 }

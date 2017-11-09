@@ -28,11 +28,15 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
             }
         }
 
-        (new DevelopmentFile(\Config::get('development.file'), base_path('development.json')))
-            ->addClassAtKey('command', $this->parseName($this->argument('name')))
+        $className = $this->parseName($this->argument('name'));
+
+        (new DevelopmentFile(\Config::get('development.file', base_path('development.json'))))
+            ->addClassAtKey('command', $className)
             ->write();
 
         parent::handle();
+
+        $this->addFileToGit($this->getPath($className));
     }
 
     /**
