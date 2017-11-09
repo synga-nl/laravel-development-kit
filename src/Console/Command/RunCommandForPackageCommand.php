@@ -59,20 +59,21 @@ class RunCommandForPackageCommand extends Command
     }
 
     /**
+     * Return all modified commands
+     *
      * @return array
      */
     public function getCommands()
     {
-        $commands = [];
+        $result = [];
 
-        foreach (\Artisan::all() as $command) {
-            /* @var $command \Symfony\Component\Console\Command\HelpCommand */
-            if (starts_with($command->getName(), 'make:')) {
-                $commands[$command->getName()] = $command;
-            }
-        }
+        foreach($this->overriddenCommands as $commandClassName){
+            $object = app()->make($commandClassName);
 
-        return $commands;
+            $result[$object->getName()] = $object;
+        };
+
+        return $result;
     }
 
     /**
