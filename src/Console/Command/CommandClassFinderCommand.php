@@ -3,7 +3,7 @@ namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
 
-class CommandClassCommand extends Command
+class CommandClassFinderCommand extends Command
 {
     /**
      * The name and signature of the console command.

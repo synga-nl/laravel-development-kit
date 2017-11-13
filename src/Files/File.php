@@ -94,6 +94,26 @@ abstract class File
     }
 
     /**
+     * Deletes a value from a certain key
+     *
+     * @param string $key
+     * @param $value
+     */
+    public function deleteValue(string $key, $value)
+    {
+        $array = $this->get($key);
+
+        if (is_array($array)) {
+            $arrayKey = array_search($value, $array);
+
+            unset($array[$arrayKey]);
+
+            $this->set($key, $array);
+            $this->write();
+        }
+    }
+
+    /**
      * Sets the given data as data of the object, if it needs to be written to the file, call the method write.
      *
      * @param $data

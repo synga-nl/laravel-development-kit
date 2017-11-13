@@ -63,6 +63,16 @@ class Controller extends BaseController
     }
 
     /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    public function getStub()
+    {
+        return $this->getStubTrait();
+    }
+
+    /**
      * Builds class and creates the base controller when needed
      *
      * @param string $name

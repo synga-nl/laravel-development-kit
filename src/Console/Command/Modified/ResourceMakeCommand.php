@@ -44,6 +44,16 @@ class ResourceMakeCommand extends \Illuminate\Foundation\Console\ResourceMakeCom
     }
 
     /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    public function getStub()
+    {
+        return $this->getStubTrait();
+    }
+
+    /**
      * Calls a command and checks if we have an overruled command
      *
      * @param string $command

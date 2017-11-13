@@ -9,7 +9,7 @@ use Synga\LaravelDevelopment\Console\ApproveExecCommand;
  * Class DeferComposerArtisanCommandsCommand
  * @package Synga\LaravelDevelopment\Console\Command
  */
-class DeferComposerArtisanCommandsCommand extends Command
+class DeferComposerCommandsCommand extends Command
 {
     /**
      * The name and signature of the console command.

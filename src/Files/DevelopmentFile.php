@@ -14,8 +14,14 @@ class DevelopmentFile extends File
      */
     public function __construct($path = null)
     {
-        if(!file_exists($path)){
-            file_put_contents($path, '{}');
+        if (!file_exists($path)) {
+            file_put_contents($path, json_encode([
+                'stubs' => [
+                    'seeder' => [
+                        'vendor/synga/laravel-development-kit/src/Console/Command/Stubs/seeder.stub'
+                    ]
+                ]
+            ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
 
         parent::__construct($path);

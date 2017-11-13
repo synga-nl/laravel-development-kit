@@ -5,6 +5,5 @@
 - Add call to fetch a packages.php file from a server/api like docker has.
 - Add functionality to create a project from scratch with all the needed packages and install them. (use inheritance from other packages.php files like docker)
 - (Added) Make the approval of commands optional
-
-
-
+- (Added) (development.json, per type defined by the class (ConsoleMakeCommand => console)) Create possibility to have a stub per command per package
+- (Added) Add all files created with this package to git

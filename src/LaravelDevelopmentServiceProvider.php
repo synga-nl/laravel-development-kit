@@ -36,13 +36,25 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $developmentFile = new DevelopmentFile(base_path('development.json'));
+
+            $commands = [];
+            foreach ($developmentFile->get('command') as $command) {
+                if (class_exists($command)) {
+                    $commands[] = $command;
+
+                    continue;
+                }
+
+                $developmentFile->deleteValue('command', $command);
+            }
+
             $this->commands(array_merge([
                 \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
-                \Synga\LaravelDevelopment\Console\Command\DeferComposerArtisanCommandsCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\DeferComposerCommandsCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\RunCommandForPackageCommand::class,
-                \Synga\LaravelDevelopment\Console\Command\CommandClassCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\CommandClassFinderCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\SeedCommand::class
-            ], $developmentFile->get('command')));
+            ], $commands));
 
             \Event::listen(CommandStarting::class, function (CommandStarting $event) {
                 ApproveExecCommand::setInputOutput($event->input, $event->output);

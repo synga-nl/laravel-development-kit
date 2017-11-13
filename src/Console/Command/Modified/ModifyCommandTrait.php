@@ -3,6 +3,7 @@
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
 use Illuminate\Support\Str;
+use Synga\LaravelDevelopment\Files\DevelopmentFile;
 
 /**
  * Trait ModifyCommandTrait
@@ -15,7 +16,7 @@ trait ModifyCommandTrait
      */
     protected $mandatoryData = [
         'root_namespace' => '',
-        'path'           => '',
+        'path' => '',
     ];
 
     /**
@@ -64,5 +65,53 @@ trait ModifyCommandTrait
         $name = str_replace_first($this->rootNamespace(), '', $name);
 
         return $this->mandatoryData['path'] . '/' . str_replace('\\', '/', $name) . '.php';
+    }
+
+    /**
+     * Asks which stub you want to use defined in the development.json file.
+     *
+     * @return string
+     */
+    public function getStubTrait()
+    {
+        $developmentFile = new DevelopmentFile(base_path('development.json'));
+
+        $reflectionClass = new \ReflectionClass($this);
+        $name = strtolower(str_replace('MakeCommand', '', $reflectionClass->getShortName()));
+
+        $stubs = $developmentFile->get('stubs.' . $name);
+
+        $choices = ['default'];
+        foreach ($stubs as $stub) {
+            if (file_exists($stub)) {
+                $choices[] = $stub;
+            }
+        }
+
+        if (1 === count($choices)) {
+            $result = 'default';
+        }
+
+        if (!isset($result)) {
+            $result = $this->choice('Which stub do you want to use?', $choices, 0, 3);
+        }
+
+        if ('default' === $result) {
+            return parent::getStub();
+        }
+
+        return $result;
+    }
+
+    /**
+     * Adds file to git.
+     *
+     * @param string $pathName
+     */
+    protected function addFileToGit(string $pathName)
+    {
+        if (file_exists(base_path('.git')) && file_exists($pathName)) {
+            exec(sprintf('cd %s && git add %s', escapeshellarg(base_path()), escapeshellarg($pathName)));
+        }
     }
 }

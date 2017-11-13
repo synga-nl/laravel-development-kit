@@ -41,6 +41,16 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
     }
 
     /**
+     * Get the stub file for the generator.
+     *
+     * @return string
+     */
+    public function getStub()
+    {
+        return $this->getStubTrait();
+    }
+
+    /**
      * Calls a command and checks if we have an overruled command
      *
      * @param string $command
@@ -116,15 +126,5 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
         $reflection->setAccessible(true);
 
         return $reflection->invoke($this, $name);
-    }
-
-    /**
-     * Get the stub file for the generator.
-     *
-     * @return string
-     */
-    protected function getStub()
-    {
-        return \Config::get('development.stubs.seeder', __DIR__ . '/../Stubs/seeder.stub');
     }
 }
