@@ -48,6 +48,9 @@ class SetupDevelopmentCommand extends Command
         if (!file_exists($developmentConfigFile)) {
             $this->call('vendor:publish',
                 ['--provider' => 'Synga\LaravelDevelopment\LaravelDevelopmentServiceProvider']);
+
+            $this->confirm('The configuration files are published, you can now edit them before the file is being processed, press enter when you are done.', true);
+
             $developmentConfig = include_once config_path('packages.php');
         } else {
             $developmentConfig = \Config::get('packages');
