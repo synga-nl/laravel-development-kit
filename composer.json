@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-
+        "laravel/framework": "5.5.*"
     },
     "autoload": {
         "psr-4": {

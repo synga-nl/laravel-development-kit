@@ -77,6 +77,8 @@ class DeferComposerCommandsCommand extends Command
                 }
             }
 
+            $this->info('Executing: ' . $command);
+
             $this->call($command);
         }
     }

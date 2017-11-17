@@ -29,7 +29,22 @@ class PackagesFinder
             return $directory;
         }
 
-        return \Config::get('development.packages_directory');
+        $directory = \Config::get('development.packages_directory', null);
+
+        if (empty($directory)) {
+            return false;
+        }
+
+        return $directory;
+    }
+
+    /**
+     * @param string|null $directory
+     * @return bool
+     */
+    protected static function packagesDirectoryExists(string $directory = null)
+    {
+        return false !== self::getDirectory($directory);
     }
 
     /**
@@ -42,9 +57,11 @@ class PackagesFinder
     {
         $packageNames = [];
 
-        foreach (self::getFinder($directory)->directories()->depth(1) as $dir) {
-            /* @var $dir \Symfony\Component\Finder\SplFileInfo */
-            $packageNames[str_replace(self::getDirectory($directory) . DIRECTORY_SEPARATOR, '', $dir->getPathname())] = $dir;
+        if (self::packagesDirectoryExists($directory)) {
+            foreach (self::getFinder($directory)->directories()->depth(1) as $dir) {
+                /* @var $dir \Symfony\Component\Finder\SplFileInfo */
+                $packageNames[str_replace(self::getDirectory($directory) . DIRECTORY_SEPARATOR, '', $dir->getPathname())] = $dir;
+            }
         }
 
         return $packageNames;

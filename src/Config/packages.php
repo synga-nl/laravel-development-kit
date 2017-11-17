@@ -1,9 +1,6 @@
 <?php
 return [
-    [
-        'composer' => [
-            'name' => 'jeroen-g/laravel-packager',
-        ],
+    'jeroen-g/laravel-packager' => [
         'dev' => true,
         'service_providers' => [
             \JeroenG\Packager\PackagerServiceProvider::class,
@@ -12,10 +9,7 @@ return [
             '--provider="JeroenG\Packager\PackagerServiceProvider"'
         ]
     ],
-    [
-        'composer' => [
-            'name' => 'barryvdh/laravel-debugbar',
-        ],
+    'barryvdh/laravel-debugbar' => [
         'dev' => true,
         'service_providers' => [
             \Barryvdh\Debugbar\ServiceProvider::class,
@@ -24,9 +18,8 @@ return [
             '--provider="Barryvdh\Debugbar\ServiceProvider"'
         ]
     ],
-    [
+    'barryvdh/laravel-ide-helper' => [
         'composer' => [
-            'name' => 'barryvdh/laravel-ide-helper',
             'commands' => [
                 'post-update-cmd' => [
                     'artisan' => [
