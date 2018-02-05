@@ -34,6 +34,10 @@ class PackagesFinder
         if (empty($directory)) {
             return false;
         }
+        
+        if (!file_exists($directory)) {
+            mkdir($directory, 0776, true);
+        }
 
         return $directory;
     }
