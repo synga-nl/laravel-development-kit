@@ -92,7 +92,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             $mergeConfiguration
                 ->addMergeHandler(new MergeComposer())
                 ->addMergeHandler(new MergeArray(['service_providers', 'aliases']))
-                ->addMergeHandler(new MergeScalar(['dev']));
+                ->addMergeHandler(new MergeScalar(['development']));
 
             return $mergeConfiguration;
         });
@@ -113,7 +113,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             $dev = $this->app->environment('local');
 
             foreach ($packagesConfig as $packageConfig) {
-                if (true !== $dev && true === $packageConfig['dev']) {
+                if (true !== $dev && true === $packageConfig['development']) {
                     continue;
                 }
 

@@ -1,7 +1,7 @@
 <?php
 return [
     'jeroen-g/laravel-packager' => [
-        'dev' => true,
+        'development' => true,
         'service_providers' => [
             \JeroenG\Packager\PackagerServiceProvider::class,
         ],
@@ -10,7 +10,7 @@ return [
         ]
     ],
     'barryvdh/laravel-debugbar' => [
-        'dev' => true,
+        'development' => true,
         'service_providers' => [
             \Barryvdh\Debugbar\ServiceProvider::class,
         ],
@@ -35,7 +35,7 @@ return [
                 ]
             ],
         ],
-        'dev' => true,
+        'development' => true,
         'service_providers' => [
             \Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         ],

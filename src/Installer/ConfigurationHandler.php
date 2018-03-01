@@ -56,11 +56,7 @@ class ConfigurationHandler
                 continue;
             }
 
-            if (isset($package['dev']) && true === $package['dev']) {
-                $type = 'development';
-            } else {
-                $type = 'production';
-            }
+            $type = (isset($package['development']) && true === $package['development']) ? 'development' : 'production';
 
             if (isset($package['composer'], $package['composer']['version'])) {
                 $packages[$type][] = $name . ':' . $package['composer']['version'];
