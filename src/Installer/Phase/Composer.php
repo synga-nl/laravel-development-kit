@@ -59,8 +59,8 @@ class Composer implements Phase
 
         $packages = $configuration->getPackagesByEnvironment($packages);
 
-        $this->requirePackages($packages['production'], true);
-        $this->requirePackages($packages['development'], false);
+        $this->requirePackages($packages['production'], false);
+        $this->requirePackages($packages['development'], true);
     }
 
     public function skipApproval()
@@ -134,14 +134,14 @@ class Composer implements Phase
      * Require packages with the "composer require" command
      *
      * @param $packages
-     * @param bool $dev
+     * @param bool $development
      */
-    private function requirePackages($packages, $dev = true)
+    private function requirePackages($packages, $development = true)
     {
         if (!empty($packages)) {
             $command = 'composer require ';
 
-            if (true === $dev) {
+            if (true === $development) {
                 $command .= '--dev ';
             }
 
