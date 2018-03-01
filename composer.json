@@ -15,5 +15,12 @@
         "psr-4": {
             "Synga\\LaravelDevelopment\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Synga\\LaravelDevelopment\\LaravelDevelopmentServiceProvider"
+            ]
+        }
     }
 }
