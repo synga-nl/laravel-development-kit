@@ -35,7 +35,7 @@ class PublishResources implements Phase
     }
 
     /**
-     * Converts a string into arguments to execute a artisan command.
+     * Converts a string into arguments to execute an artisan command.
      *
      * @param string $commandString
      * @return array

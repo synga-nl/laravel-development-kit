@@ -52,6 +52,7 @@ class PackageInstaller
                 $phase->skipApproval();
             }
 
+            echo 'Executing: ' . get_class($phase) . "\r\n";
             $phase->handle($configuration);
         }
     }
