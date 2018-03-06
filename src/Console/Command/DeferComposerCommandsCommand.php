@@ -3,7 +3,7 @@
 namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
-use Synga\LaravelDevelopment\Console\ApproveExecCommand;
+use Synga\LaravelDevelopment\Console\ConfirmShellCommand;
 
 /**
  * Class DeferComposerArtisanCommandsCommand
@@ -53,7 +53,7 @@ class DeferComposerCommandsCommand extends Command
                     foreach ($commands['shell'] as $artisanCommand) {
                         $command = (is_array($artisanCommand)) ? $artisanCommand['command'] : $artisanCommand;
 
-                        ApproveExecCommand::exec($command, $this->option('skip-approval'));
+                        ConfirmShellCommand::exec($command, $this->option('skip-approval'));
                     }
                 }
             }

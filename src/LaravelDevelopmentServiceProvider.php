@@ -4,7 +4,7 @@ namespace Synga\LaravelDevelopment;
 
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Support\ServiceProvider;
-use Synga\LaravelDevelopment\Console\ApproveExecCommand;
+use Synga\LaravelDevelopment\Console\ConfirmShellCommand;
 use Synga\LaravelDevelopment\Files\ComposerLockFile;
 use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\Installer\PackageInstaller;
@@ -57,7 +57,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             ], $commands));
 
             \Event::listen(CommandStarting::class, function (CommandStarting $event) {
-                ApproveExecCommand::setInputOutput($event->input, $event->output);
+                ConfirmShellCommand::setInputOutput($event->input, $event->output);
 
                 /* @var CommandStarting $event */
                 if ('db:seed' === $event->command) {

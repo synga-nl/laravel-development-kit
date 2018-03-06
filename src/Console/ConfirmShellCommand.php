@@ -11,7 +11,7 @@ use Symfony\Component\Console\Question\Question;
  * Class ApproveExecCommand
  * @package Synga\LaravelDevelopment\Console
  */
-class ApproveExecCommand
+class ConfirmShellCommand
 {
     /**
      * @var InputInterface

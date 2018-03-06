@@ -21,7 +21,8 @@ trait RunCommandTrait
         'make:command' => \Synga\LaravelDevelopment\Console\Command\Modified\ConsoleMakeCommand::class,
         'make:controller' => \Synga\LaravelDevelopment\Console\Command\Modified\ControllerMakeCommand::class,
         'make:resource' => \Synga\LaravelDevelopment\Console\Command\Modified\ResourceMakeCommand::class,
-        'make:seeder' => \Synga\LaravelDevelopment\Console\Command\Modified\SeederMakeCommand::class
+        'make:seeder' => \Synga\LaravelDevelopment\Console\Command\Modified\SeederMakeCommand::class,
+        'make:route' => \Synga\LaravelDevelopment\Console\Command\Modified\RouteMakeCommand::class
     ];
 
     /**

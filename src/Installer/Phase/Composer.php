@@ -3,7 +3,7 @@
 namespace Synga\LaravelDevelopment\Installer\Phase;
 
 use Illuminate\Support\Collection;
-use Synga\LaravelDevelopment\Console\ApproveExecCommand;
+use Synga\LaravelDevelopment\Console\ConfirmShellCommand;
 use Synga\LaravelDevelopment\Files\ComposerFile;
 use Synga\LaravelDevelopment\Files\ComposerLockFile;
 use Synga\LaravelDevelopment\Installer\ConfigurationHandler;
@@ -149,7 +149,7 @@ class Composer implements Phase
                 $command .= escapeshellarg($package) . ' ';
             }
 
-            ApproveExecCommand::exec($command, $this->skipApproval);
+            ConfirmShellCommand::exec($command, $this->skipApproval);
         }
     }
 }
