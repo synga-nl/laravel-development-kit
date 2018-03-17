@@ -13,22 +13,6 @@ class MigrateMakeCommand extends \Illuminate\Database\Console\Migrations\Migrate
     use RunCommandTrait, ModifyCommandTrait;
 
     /**
-     * Execute the console command.
-     *
-     * @return null|false
-     */
-    public function fire()
-    {
-        foreach ($this->mandatoryData as $data) {
-            if (empty($data)) {
-                return false;
-            }
-        }
-
-        parent::fire();
-    }
-
-    /**
      * Adds file to git after creation
      */
     public function handle(){

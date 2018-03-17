@@ -47,7 +47,7 @@ trait RunCommandTrait
      * @param $command
      * @param $input
      */
-    protected function runCommand(Command $command, $input)
+    protected function runCommand(Command $command, string $input)
     {
         $command->setLaravel($this->getLaravel());
 

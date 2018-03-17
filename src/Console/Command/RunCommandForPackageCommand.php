@@ -67,7 +67,7 @@ class RunCommandForPackageCommand extends Command
     {
         $result = [];
 
-        foreach($this->overriddenCommands as $commandClassName){
+        foreach ($this->overriddenCommands as $commandClassName) {
             $object = app()->make($commandClassName);
 
             $result[$object->getName()] = $object;
@@ -90,33 +90,44 @@ class RunCommandForPackageCommand extends Command
             return false;
         }
 
-        $packageNames = array_merge($packageNames, ['exit' => 'exit']);
+        $packageNames = array_merge($packageNames, ['New package' => 'new_package', 'exit' => 'exit']);
 
         $commands = $this->getCommands();
         $commands = array_merge($commands, ['exit' => 'exit']);
 
         $package = $this->choice('In which package do you want to work?', array_keys($packageNames));
+
+        if ('new_package' === $packageNames[$package]) {
+            $this->runLaravelCommand('packager:new');
+
+            return true;
+        }
+
         if ('exit' === $package) {
             $this->info('We wish you all good fortune and happiness for the future!');
+
             return false;
         };
 
         $commandName = $this->choice('What is the command you want to execute', array_keys($commands));
         if ('exit' === $commandName) {
             $this->info('We wish you all good fortune and happiness for the future!');
+
             return false;
         };
 
-        $this->runCommand($commands, $commandName, $package, $packageNames);
+        $this->runCommandOverriddenCommand($commands, $commandName, $package, $packageNames);
     }
 
     /**
+     * Run a overridden/modified Laravel command.
+     *
      * @param $commands
      * @param $commandName
      * @param $package
      * @param $packageNames
      */
-    public function runCommand($commands, $commandName, $package, $packageNames)
+    public function runCommandOverriddenCommand($commands, $commandName, $package, $packageNames)
     {
         $command = $this->createCommand($commands[$commandName]->getName());
         if (!empty($command)) {
@@ -130,8 +141,40 @@ class RunCommandForPackageCommand extends Command
             $this->info($command->getSynopsis());
             $parameters = $this->ask('Please fill in the command parameters');
 
-            $command->setLaravel($this->laravel);
-            $command->run(new StringInput($parameters), $this->output);
+            $this->runCommand($command, $parameters);
         }
+    }
+
+    /**
+     * Run a default Laravel command.
+     *
+     * @param $commandName
+     */
+    public function runLaravelCommand($commandName)
+    {
+        foreach (\Artisan::all() as $name => $command) {
+            if ($commandName === $name) {
+                $laravelCommand = $command;
+            }
+        }
+
+        if (isset($laravelCommand)) {
+            $this->info($laravelCommand->getSynopsis());
+            $parameters = $commandName . ' ' . $this->ask('Please fill in the command parameters');
+
+            $this->runCommand($laravelCommand, $parameters);
+        }
+    }
+
+    /**
+     * Run the actual command with the given parameters.
+     *
+     * @param Command $command
+     * @param string $parameters
+     */
+    public function runCommand(Command $command, string $parameters)
+    {
+        $command->setLaravel($this->laravel);
+        $command->run(new StringInput($parameters), $this->output);
     }
 }

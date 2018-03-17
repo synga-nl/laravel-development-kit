@@ -17,22 +17,6 @@ class ResourceMakeCommand extends \Illuminate\Foundation\Console\ResourceMakeCom
     private $path = 'Resources';
 
     /**
-     * Execute the console command.
-     *
-     * @return null|false
-     */
-    public function fire()
-    {
-        foreach ($this->mandatoryData as $data) {
-            if (empty($data)) {
-                return false;
-            }
-        }
-
-        parent::fire();
-    }
-
-    /**
      * Adds file to git after creation
      */
     public function handle(){

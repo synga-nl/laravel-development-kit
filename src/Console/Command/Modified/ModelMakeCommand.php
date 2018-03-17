@@ -15,22 +15,6 @@ class ModelMakeCommand extends \Illuminate\Foundation\Console\ModelMakeCommand
     private $path = 'Database\Model';
 
     /**
-     * Execute the console command.
-     *
-     * @return null|false
-     */
-    public function fire()
-    {
-        foreach ($this->mandatoryData as $data) {
-            if (empty($data)) {
-                return false;
-            }
-        }
-
-        parent::fire();
-    }
-
-    /**
      * Adds file to git after creation
      */
     public function handle(){
