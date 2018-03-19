@@ -20,6 +20,20 @@ trait ModifyCommandTrait
     ];
 
     /**
+     * Sets mendatory data on the current object.
+     *
+     * @param $data
+     */
+    public function setData($data)
+    {
+        foreach ($data as $key => $value) {
+            if (isset($this->mandatoryData[$key])) {
+                $this->mandatoryData[$key] = $data[$key];
+            }
+        }
+    }
+
+    /**
      * Parse the name and format according to the root namespace.
      *
      * @param  string $name

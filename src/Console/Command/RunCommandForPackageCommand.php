@@ -3,8 +3,6 @@
 namespace Synga\LaravelDevelopment\Console\Command;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\StringInput;
-use Symfony\Component\Finder\Finder;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
 /**
@@ -42,23 +40,6 @@ class RunCommandForPackageCommand extends Command
     }
 
     /**
-     * @param $directory
-     * @return array
-     */
-    public function getPackageNames($directory)
-    {
-        $packageNames = [];
-
-        if (file_exists($directory)) {
-            foreach (Finder::create()->in($directory)->directories()->depth(1) as $dir) {
-                $packageNames[str_replace($directory . DIRECTORY_SEPARATOR, '', $dir->getPathname())] = $dir;
-            }
-        }
-
-        return $packageNames;
-    }
-
-    /**
      * Return all modified commands
      *
      * @return array
@@ -67,7 +48,7 @@ class RunCommandForPackageCommand extends Command
     {
         $result = [];
 
-        foreach ($this->overriddenCommands as $commandClassName) {
+        foreach ($this->getOverriddenCommands() as $commandClassName) {
             $object = app()->make($commandClassName);
 
             $result[$object->getName()] = $object;
@@ -81,16 +62,10 @@ class RunCommandForPackageCommand extends Command
      */
     public function newCommand()
     {
-        $packagesDirectory = 'packages';
-        $directory = base_path($packagesDirectory);
-
-        $packageNames = $this->getPackageNames($directory);
-        if (empty($packageNames)) {
-            $this->info('No packages are found');
-            return false;
-        }
-
-        $packageNames = array_merge($packageNames, ['New package' => 'new_package', 'exit' => 'exit']);
+        $packageNames = array_merge(
+            $this->getPackageNames(\Config::get('development.packages_directory')),
+            ['New package' => 'new_package', 'exit' => 'exit']
+        );
 
         $commands = $this->getCommands();
         $commands = array_merge($commands, ['exit' => 'exit']);
@@ -116,65 +91,6 @@ class RunCommandForPackageCommand extends Command
             return false;
         };
 
-        $this->runCommandOverriddenCommand($commands, $commandName, $package, $packageNames);
-    }
-
-    /**
-     * Run a overridden/modified Laravel command.
-     *
-     * @param $commands
-     * @param $commandName
-     * @param $package
-     * @param $packageNames
-     */
-    public function runCommandOverriddenCommand($commands, $commandName, $package, $packageNames)
-    {
-        $command = $this->createCommand($commands[$commandName]->getName());
-        if (!empty($command)) {
-            if (method_exists($command, 'setData')) {
-                $command->setData([
-                    'root_namespace' => str_replace('/', '\\', $package),
-                    'path' => $packageNames[$package]->getPathname() . DIRECTORY_SEPARATOR . 'src',
-                ]);
-            }
-
-            $this->info($command->getSynopsis());
-            $parameters = $this->ask('Please fill in the command parameters');
-
-            $this->runCommand($command, $parameters);
-        }
-    }
-
-    /**
-     * Run a default Laravel command.
-     *
-     * @param $commandName
-     */
-    public function runLaravelCommand($commandName)
-    {
-        foreach (\Artisan::all() as $name => $command) {
-            if ($commandName === $name) {
-                $laravelCommand = $command;
-            }
-        }
-
-        if (isset($laravelCommand)) {
-            $this->info($laravelCommand->getSynopsis());
-            $parameters = $commandName . ' ' . $this->ask('Please fill in the command parameters');
-
-            $this->runCommand($laravelCommand, $parameters);
-        }
-    }
-
-    /**
-     * Run the actual command with the given parameters.
-     *
-     * @param Command $command
-     * @param string $parameters
-     */
-    public function runCommand(Command $command, string $parameters)
-    {
-        $command->setLaravel($this->laravel);
-        $command->run(new StringInput($parameters), $this->output);
+        $this->runOverriddenCommand($commands, $commandName, $package, $packageNames);
     }
 }
