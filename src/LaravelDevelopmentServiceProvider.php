@@ -113,7 +113,7 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
             $dev = $this->app->environment('local');
 
             foreach ($packagesConfig as $packageConfig) {
-                if (true !== $dev && true === $packageConfig['development']) {
+                if (true !== $dev && (isset($packageConfig['development']) && true === $packageConfig['development'])) {
                     continue;
                 }
 
