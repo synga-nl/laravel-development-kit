@@ -4,7 +4,7 @@ $baseDir = '/data/www/';
 $testProject = 'test123';
 
 $vendorSymlinks = [
-    'vendor/synga/laravel-development-kit' => '/data/www/laravel-development-kit'
+    'vendor/synga/laravel-development-kit' => $baseDir . 'laravel-development-kit'
 ];
 
 $baseFullDir = $baseDir . $testProject;
