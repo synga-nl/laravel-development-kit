@@ -26,6 +26,8 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
      * Perform post-registration booting of services.
      *
      * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function boot()
     {
@@ -35,9 +37,10 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
         ]);
 
         if ($this->app->runningInConsole()) {
-            $developmentFile = new DevelopmentFile(base_path('development.json'));
+            $developmentFile = $this->app->get(DevelopmentFile::class);
 
             $commands = [];
+
             foreach ($developmentFile->get('command') as $command) {
                 if (class_exists($command)) {
                     $commands[] = $command;
@@ -95,6 +98,10 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
                 ->addMergeHandler(new MergeScalar(['development']));
 
             return $mergeConfiguration;
+        });
+
+        $this->app->bind(DevelopmentFile::class, function () {
+            return new DevelopmentFile(base_path('development.json'));
         });
 
         $this->registerPackages();

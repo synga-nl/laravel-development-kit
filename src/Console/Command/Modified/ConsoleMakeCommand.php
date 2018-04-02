@@ -2,6 +2,7 @@
 
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
+use Illuminate\Filesystem\Filesystem;
 use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
@@ -13,7 +14,27 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
 {
     use RunCommandTrait, ModifyCommandTrait;
 
+    /**
+     * @var string
+     */
     private $path = 'Console\Command';
+
+    /**
+     * @var DevelopmentFile
+     */
+    private $developmentFile;
+
+    /**
+     * ConsoleMakeCommand constructor.
+     * @param Filesystem $files
+     * @param DevelopmentFile $developmentFile
+     */
+    public function __construct(Filesystem $files, DevelopmentFile $developmentFile)
+    {
+        parent::__construct($files);
+
+        $this->developmentFile = $developmentFile;
+    }
 
     /**
      * Execute the console command.
@@ -30,7 +51,7 @@ class ConsoleMakeCommand extends \Illuminate\Foundation\Console\ConsoleMakeComma
 
         $className = $this->parseName($this->argument('name'));
 
-        (new DevelopmentFile(\Config::get('development.file', base_path('development.json'))))
+        $this->developmentFile
             ->addClassAtKey('command', $className)
             ->write();
 

@@ -19,8 +19,12 @@ class DevelopmentFile extends File
                 'stubs' => [
                     'seeder' => [
                         'vendor/synga/laravel-development-kit/src/Console/Command/Stubs/seeder.stub'
+                    ],
+                    'controller' => [
+                        'vendor/synga/laravel-development-kit/src/Console/Command/Stubs/controller.api.stub'
                     ]
-                ]
+                ],
+                'api_trait' => \Synga\LaravelDevelopment\Common\ApiTrait::class
             ], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
 

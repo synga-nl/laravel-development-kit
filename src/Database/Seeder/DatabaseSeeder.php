@@ -12,9 +12,24 @@ use Synga\LaravelDevelopment\Files\DevelopmentFile;
 class DatabaseSeeder extends Seeder
 {
     /**
+     * @var DevelopmentFile
+     */
+    protected $developmentFile;
+
+    /**
+     * DatabaseSeeder constructor.
+     * @param DevelopmentFile $developmentFile
+     */
+    public function __construct(DevelopmentFile $developmentFile)
+    {
+        $this->developmentFile = $developmentFile;
+    }
+
+    /**
      * Run the database seeds.
      *
      * @return void
+     * @throws \Exception
      */
     public function run()
     {
@@ -35,15 +50,7 @@ class DatabaseSeeder extends Seeder
      */
     public function getSeeds()
     {
-        $path = \Config::get('development.file'), base_path('development.json');
-
-        if (!file_exists($path)) {
-            throw new \Exception('There is no development.json file found, make sure this file exists');
-        }
-
-        $developmentFile = new DevelopmentFile($path);
-
-        $seeds = $developmentFile->get('seeder');
+        $seeds = $this->developmentFile->get('seeder');
 
         if (empty($seeds)) {
             throw new \Exception(

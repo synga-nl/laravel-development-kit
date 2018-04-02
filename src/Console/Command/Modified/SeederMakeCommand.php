@@ -3,6 +3,8 @@
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Composer;
 use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
@@ -14,6 +16,18 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
      * @var string
      */
     private $path = 'Database\Seeds';
+
+    /**
+     * @var DevelopmentFile
+     */
+    private $developmentFile;
+
+    public function __construct(Filesystem $files, Composer $composer, DevelopmentFile $developmentFile)
+    {
+        parent::__construct($files, $composer);
+
+        $this->developmentFile = $developmentFile;
+    }
 
     /**
      * Execute the console command.
@@ -30,7 +44,7 @@ class SeederMakeCommand extends \Illuminate\Database\Console\Seeds\SeederMakeCom
 
         $className = $this->parseName($this->argument('name'));
 
-        (new DevelopmentFile(\Config::get('development.file', base_path('development.json'))))
+        $this->developmentFile
             ->addClassAtKey('seeder', $className)
             ->write();
 

@@ -20,6 +20,11 @@ trait ModifyCommandTrait
     ];
 
     /**
+     * @var array
+     */
+    protected $extraData = [];
+
+    /**
      * Sets mendatory data on the current object.
      *
      * @param $data
@@ -29,6 +34,8 @@ trait ModifyCommandTrait
         foreach ($data as $key => $value) {
             if (isset($this->mandatoryData[$key])) {
                 $this->mandatoryData[$key] = $data[$key];
+            } else {
+                $this->extraData[$key] = $value;
             }
         }
     }
@@ -103,6 +110,10 @@ trait ModifyCommandTrait
         }
 
         return $result;
+    }
+
+    public function getQualifiedClass($name){
+        return $this->qualifyClass($name);
     }
 
     /**

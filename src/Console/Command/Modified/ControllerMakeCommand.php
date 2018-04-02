@@ -2,6 +2,9 @@
 
 namespace Synga\LaravelDevelopment\Console\Command\Modified;
 
+use Illuminate\Filesystem\Filesystem;
+use Synga\LaravelDevelopment\Common\ApiTrait;
+use Synga\LaravelDevelopment\Files\DevelopmentFile;
 use Synga\LaravelDevelopment\RunCommandTrait;
 
 /**
@@ -16,6 +19,11 @@ class ControllerMakeCommand extends \Illuminate\Routing\Console\ControllerMakeCo
      * @var string
      */
     private $path = 'Http\Controllers';
+
+    /**
+     * @var DevelopmentFile
+     */
+    private $developmentFile;
 
     /**
      * @var string
@@ -36,9 +44,22 @@ class Controller extends BaseController
 ';
 
     /**
+     * ControllerMakeCommand constructor.
+     * @param Filesystem $files
+     * @param DevelopmentFile $developmentFile
+     */
+    public function __construct(Filesystem $files, DevelopmentFile $developmentFile)
+    {
+        parent::__construct($files);
+
+        $this->developmentFile = $developmentFile;
+    }
+
+    /**
      * Adds file to git after creation
      */
-    public function handle(){
+    public function handle()
+    {
         parent::handle();
 
         $pathName = $this->getPath($this->parseName($this->argument('name')));
@@ -64,18 +85,66 @@ class Controller extends BaseController
      */
     protected function buildClass($name)
     {
-        $result = parent::buildClass($name);
+        $stub = parent::buildClass($name);
 
+        $this
+            ->replaceInStub($stub)
+            ->createBaseControllerForPackage();
+
+        return $stub;
+    }
+
+    /**
+     * Creates the base controller for the current package.
+     *
+     * @return $this
+     */
+    protected function createBaseControllerForPackage()
+    {
         $namespace = $this->getDefaultNamespace($this->rootNamespace(false));
         $path = $this->getPathTrait($namespace . '\Controller');
 
+        $stubData = [
+            '{{ namespace }}' => $namespace,
+        ];
+
         if (!file_exists($path)) {
-            file_put_contents($path, str_replace('{{ namespace }}', $namespace, $this->baseController));
+            file_put_contents(
+                $path,
+                str_replace(array_keys($stubData), array_values($stubData), $this->baseController)
+            );
         }
 
         $this->addFileToGit($path);
 
-        return $result;
+        return $this;
+    }
+
+    /**
+     * Replace values in $stub.
+     *
+     * @param string $stub
+     * @return $this
+     */
+    protected function replaceInStub(&$stub)
+    {
+        $explodedClass = explode('\\', $this->developmentFile->get('api_trait', ApiTrait::class));
+        $class = end($explodedClass);
+
+        $stubData = [
+            '{{ api_trait_qualified_class }}' => $this->developmentFile->get('api_trait', ApiTrait::class),
+            '{{ api_trait_class }}' => $class
+        ];
+
+        foreach ($this->extraData as $commandName => $extraData) {
+            foreach ($extraData as $key => $value) {
+                $stubData['{{ ' . $commandName . ':' . $key . ' }}'] = $value;
+            }
+        }
+
+        $stub = str_replace(array_keys($stubData), array_values($stubData), $stub);
+
+        return $this;
     }
 
     /**

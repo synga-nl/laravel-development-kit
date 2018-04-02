@@ -1,0 +1,83 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Http\Request;
+use DummyRootNamespaceHttp\Controllers\Controller;
+use {{ api_trait_qualified_class }};
+use {{ make:model:qualified_class }};
+use {{ make:resource:qualified_class }};
+
+class DummyClass extends Controller
+{
+    use {{ api_trait_class }};
+
+    /**
+     * The resource class for this controller.
+     *
+     * @var string
+     */
+    protected $resourceClass = {{ make:resource:class }}::class;
+
+    /**
+     * Pony
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $model = new {{ make:model:class }}();
+
+        $this->all();
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+        return $this->get($request, function ($query) use ($id) {
+            $query->where('id', $id);
+
+            return $query;
+        }, new {{ make:model:class }}());
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}

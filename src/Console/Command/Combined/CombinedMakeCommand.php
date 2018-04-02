@@ -42,6 +42,8 @@ abstract class CombinedMakeCommand extends Command
      */
     public function handle()
     {
+        $commands = $extraData = [];
+
         foreach ($this->commands as $commandName => $arguments) {
             if (!is_array($arguments)) {
                 $commandName = $arguments;
@@ -54,9 +56,22 @@ abstract class CombinedMakeCommand extends Command
                     'root_namespace' => $this->mandatoryData['root_namespace'],
                     'path' => $this->mandatoryData['path'],
                 ]);
+
+                $qualifiedClass = $command->getQualifiedClass($this->getClassName($arguments));
+                $exploded = explode('\\', $qualifiedClass);
+                $extraData[$commandName] = [
+                    'qualified_class' => $qualifiedClass,
+                    'class' => end($exploded)
+                ];
             }
 
-            $this->runCommand($command, $this->getArgumentsString($arguments));
+            $commands[$commandName] = $command;
+        }
+
+        foreach ($commands as $commandName => $command) {
+            $command->setData($extraData);
+
+            $this->runCommand($command, $this->getArgumentsString($this->commands[$commandName]));
         }
     }
 
@@ -68,14 +83,27 @@ abstract class CombinedMakeCommand extends Command
      */
     protected function getArgumentsString($arguments)
     {
+        $name = $this->getClassName($arguments);
+
+        if (isset($arguments['arguments'])) {
+            $name = $arguments['arguments'] . ' ' . $name;
+        }
+
+        return $name;
+    }
+
+    /**
+     * Gets the class name for current input key "name".
+     *
+     * @param $arguments
+     * @return array|string
+     */
+    public function getClassName($arguments)
+    {
         $name = $this->argument('name');
 
         if (isset($arguments['suffix'])) {
             $name = $name . $arguments['suffix'];
-        }
-
-        if (isset($arguments['arguments'])) {
-            $name = $arguments['arguments'] . ' ' . $name;
         }
 
         return $name;
