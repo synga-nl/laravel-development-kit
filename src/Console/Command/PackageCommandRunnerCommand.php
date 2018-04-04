@@ -9,7 +9,7 @@ use Synga\LaravelDevelopment\RunCommandTrait;
  * Class RunCommandForPackageCommand
  * @package Synga\LaravelDevelopment\Console\Command
  */
-class RunCommandForPackageCommand extends Command
+class PackageCommandRunnerCommand extends Command
 {
     use RunCommandTrait;
 

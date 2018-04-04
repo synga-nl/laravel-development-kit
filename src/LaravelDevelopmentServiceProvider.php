@@ -53,9 +53,9 @@ class LaravelDevelopmentServiceProvider extends ServiceProvider
 
             $this->commands(array_merge([
                 \Synga\LaravelDevelopment\Console\Command\SetupDevelopmentCommand::class,
-                \Synga\LaravelDevelopment\Console\Command\DeferComposerCommandsCommand::class,
-                \Synga\LaravelDevelopment\Console\Command\RunCommandForPackageCommand::class,
-                \Synga\LaravelDevelopment\Console\Command\CommandClassFinderCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\ComposerScriptRunnerCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\PackageCommandRunnerCommand::class,
+                \Synga\LaravelDevelopment\Console\Command\ConsoleClassFinderCommand::class,
                 \Synga\LaravelDevelopment\Console\Command\SeedCommand::class
             ], $commands));
 

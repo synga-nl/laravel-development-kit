@@ -9,7 +9,7 @@ use Synga\LaravelDevelopment\Console\ConfirmShellCommand;
  * Class DeferComposerArtisanCommandsCommand
  * @package Synga\LaravelDevelopment\Console\Command
  */
-class DeferComposerCommandsCommand extends Command
+class ComposerScriptRunnerCommand extends Command
 {
     /**
      * The name and signature of the console command.
