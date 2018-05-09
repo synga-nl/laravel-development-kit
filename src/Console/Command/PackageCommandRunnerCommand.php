@@ -34,6 +34,8 @@ class PackageCommandRunnerCommand extends Command
      */
     public function handle()
     {
+        $this->input->setInteractive(true);
+
         do {
             $result = $this->newCommand();
         } while (false !== $result);

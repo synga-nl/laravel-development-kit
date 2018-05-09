@@ -4,7 +4,8 @@ $baseDir = '/data/www/';
 $testProject = 'test123';
 
 $vendorSymlinks = [
-    'vendor/synga/laravel-development-kit' => $baseDir . 'laravel-development-kit'
+    'vendor/synga/laravel-development-kit' => $baseDir . 'laravel-development-kit',
+    'vendor/synga/interactive-console-tester' => $baseDir . 'interactive-console-tester'
 ];
 
 $baseFullDir = $baseDir . $testProject;
@@ -18,6 +19,7 @@ exec('cd ' . $baseDir . ' && composer create-project --prefer-dist laravel/larav
 
 $composerFile = json_decode(file_get_contents($composerPath), true);
 $composerFile['require']['synga/laravel-development-kit'] = 'dev-master';
+$composerFile['require']['synga/interactive-console-tester'] = 'dev-master';
 
 if (empty($composerFile['require'])) {
     unset($composerFile['require']);

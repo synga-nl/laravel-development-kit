@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "laravel/framework": ">=5.5"
+        "laravel/framework": ">=5.5",
+        "synga/interactive-console-tester": "dev-master"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "2.10.*"
